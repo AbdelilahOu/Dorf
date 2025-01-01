@@ -1,0 +1,34 @@
+name = "api"
+main = "src/index.ts"
+compatibility_date = "2024-12-10"
+compatibility_flags = ["nodejs_compat_v2"]
+
+[vars]
+DATABASE_URL = "DATABASE_URL"
+
+[[workflows]]
+name = "practice-audio-generator"
+binding =  "PRACTICE_AUDIO_GENERATOR"
+class_name = "PracticeAudioGenerator"
+
+# [ai]
+# binding = "AI"
+
+# [[kv_namespaces]]
+# binding = "MY_KV_NAMESPACE"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# [[r2_buckets]]
+# binding = "MY_BUCKET"
+# bucket_name = "my-bucket"
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "my-database"
+# database_id = ""
+
+
+
+# [observability]
+# enabled = true
+# head_sampling_rate = 1

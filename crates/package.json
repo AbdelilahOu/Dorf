@@ -1,0 +1,9 @@
+{
+  "name": "@dorf/crates",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:internal-tauri": "bun --cwd ../ dev:internal-tauri",
+    "build:desktop": "bun --cwd ../ build:desktop"
+  }
+}

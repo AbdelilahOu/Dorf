@@ -1,0 +1,51 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "files": {
+    "ignore": [".wrangler/**/*", "./crates/dorf-tauri/**/*"]
+  },
+  "linter": {
+    "ignore": ["node_modules", ".next", ".wrangler", "packages/tsconfig"],
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "nursery": {
+        "useSortedClasses": {
+          "level": "info",
+          "options": {
+            "attributes": ["className"],
+            "functions": ["cn", "clsx"]
+          },
+          "fix": "unsafe"
+        }
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useSelfClosingElements": "warn",
+        "useImportType": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off",
+        "noUnusedImports": {
+          "level": "info",
+          "fix": "safe"
+        }
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      },
+      "complexity": {
+        "useLiteralKeys": "off"
+      }
+    }
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "ignore": ["node_modules", ".next", ".wrangler"]
+  }
+}

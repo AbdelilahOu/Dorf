@@ -1,0 +1,34 @@
+{
+  "name": "@dorf/api",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "NODE_ENV=development wrangler dev src/index.ts --port 3003",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "db:generate": "bunx drizzle-kit generate",
+    "db:migrate": "bunx drizzle-kit migrate",
+    "db:push": "bunx drizzle-kit push",
+    "db:roll": "bunx drizzle-kit push",
+    "db:seed": "bun ./src/db/seed.ts",
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "biome check --write .",
+    "format": "biome format --write .",
+    "check:types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono/zod-openapi": "^0.18.3",
+    "@hono/zod-validator": "^0.4.2",
+    "@scalar/hono-api-reference": "^0.5.165",
+    "better-auth": "^1.1.3",
+    "drizzle-orm": "^0.38.3",
+    "hono": "^4.6.13",
+    "hono-pino": "^0.7.0",
+    "postgres": "^3.4.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241112.0",
+    "@types/bun": "^1.1.14",
+    "drizzle-kit": "^0.30.1",
+    "wrangler": "^3.99.0"
+  }
+}
