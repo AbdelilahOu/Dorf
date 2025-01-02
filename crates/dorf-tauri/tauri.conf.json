@@ -1,12 +1,13 @@
 {
+  "$schema": "../../node_modules/@tauri-apps/cli/schema.json",
   "productName": "dorf",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.dorf.dev",
   "build": {
     "beforeBuildCommand": "bun run build:desktop",
     "beforeDevCommand": "bun run dev:internal-tauri",
     "devUrl": "http://localhost:3000",
-    "frontendDist": "../../apps/desktop/build"
+    "frontendDist": "../../apps/desktop/dist"
   },
   "app": {
     "windows": [

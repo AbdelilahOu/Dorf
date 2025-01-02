@@ -1,3 +1,3 @@
-package com.tauri.dev
+package com.dorf.dev
 
 class MainActivity : TauriActivity()
