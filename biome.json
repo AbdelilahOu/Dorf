@@ -40,7 +40,8 @@
         }
       },
       "suspicious": {
-        "noArrayIndexKey": "off"
+        "noArrayIndexKey": "off",
+        "noExplicitAny": "off"
       },
       "complexity": {
         "useLiteralKeys": "off"
