@@ -15,9 +15,7 @@ export const postsTable = sqliteTable("posts", {
   userId: integer("user_id")
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
-  createdAt: text("created_at")
-    .default(sql`(CURRENT_TIMESTAMP)`)
-    .notNull(),
+  createdAt: text("created_at").default(sql`(CURRENT_TIMESTAMP)`).notNull(),
   updateAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(
     () => new Date(),
   ),
