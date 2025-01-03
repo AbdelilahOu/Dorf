@@ -1,7 +1,12 @@
 {
   "name": "dorf",
   "private": true,
-  "workspaces": ["packages/*", "apps/*", "tooling/*", "crates"],
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "tooling/*",
+    "crates"
+  ],
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
@@ -23,11 +28,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
+    "@tauri-apps/cli": "^2.1.0",
     "turbo": "^2.3.3",
     "typescript": "^5.5.4"
   },
-  "packageManager": "bun@1.1.26",
-  "dependencies": {
-    "@tauri-apps/cli": "^2.1.0"
-  }
+  "packageManager": "bun@1.1.26"
 }
