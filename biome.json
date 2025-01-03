@@ -4,10 +4,15 @@
     "enabled": true
   },
   "files": {
-    "ignore": [".wrangler/**/*", "./crates/dorf-tauri/**/*"]
+    "ignore": [
+      ".wrangler/**/*",
+      "crates/dorf-tauri/**/*",
+      "apps/desktop/src/routeTree.gen.ts",
+      ".dist/**/*",
+      ".next/**/*"
+    ]
   },
   "linter": {
-    "ignore": ["node_modules", ".next", ".wrangler", "packages/tsconfig"],
     "enabled": true,
     "rules": {
       "recommended": true,
@@ -17,8 +22,7 @@
           "options": {
             "attributes": ["className"],
             "functions": ["cn", "clsx"]
-          },
-          "fix": "unsafe"
+          }
         }
       },
       "a11y": {
@@ -26,8 +30,7 @@
       },
       "style": {
         "noNonNullAssertion": "off",
-        "useSelfClosingElements": "warn",
-        "useImportType": "off"
+        "useSelfClosingElements": "warn"
       },
       "correctness": {
         "useExhaustiveDependencies": "off",
@@ -45,7 +48,6 @@
     }
   },
   "formatter": {
-    "indentStyle": "space",
-    "ignore": ["node_modules", ".next", ".wrangler"]
+    "indentStyle": "space"
   }
 }

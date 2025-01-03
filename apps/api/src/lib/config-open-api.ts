@@ -1,6 +1,6 @@
 import { apiReference } from "@scalar/hono-api-reference";
 import PackageJson from "package.json";
-import { AppOpenAPI } from "./types";
+import type { AppOpenAPI } from "./types";
 
 export default function configureOpenAPI(app: AppOpenAPI) {
   app.openAPIRegistry.registerComponent("securitySchemes", "Bearer", {

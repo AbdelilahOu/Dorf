@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { logger } from "@dorf/logger";
-import { Context, Next } from "hono";
+import type { Context, Next } from "hono";
 import { pinoLogger } from "hono-pino";
 import { cors } from "hono/cors";
 
