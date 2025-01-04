@@ -1,34 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@dorf/ui/button";
 import { Input } from "@dorf/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@dorf/ui/dialog";
+
+import { useQueryState } from "nuqs";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
 });
 
 function HomeComponent() {
+  const [name, setName] = useQueryState("name");
   return (
-    <div className="p-2">
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant={"default"} size={"lg"}>
-            Hi
-          </Button>
-        </DialogTrigger>
-        <DialogContent autoFocus={false}>
-          <DialogHeader>
-            <DialogTitle>Write some message</DialogTitle>
-          </DialogHeader>
-          <Input />
-        </DialogContent>
-      </Dialog>
-    </div>
+    <>
+      <Input value={name || ""} onChange={(e) => setName(e.target.value)} />
+      <Button onClick={() => setName(null)}>Clear</Button>
+      <p>Hello, {name || "anonymous visitor"}!</p>
+    </>
   );
 }

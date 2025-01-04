@@ -24,8 +24,11 @@
     "vite": "^6.0.3"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.62.15",
+    "@tanstack/react-query-devtools": "^5.62.15",
     "@tanstack/react-router": "^1.92.13",
     "@tanstack/router-devtools": "^1.92.13",
+    "nuqs": "^2.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
