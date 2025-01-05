@@ -7,8 +7,8 @@
     "ignore": [
       ".wrangler/**/*",
       "crates/dorf-tauri/**/*",
-      "apps/desktop/src/routeTree.gen.ts",
-      ".dist/**/*",
+      "apps/mobile/src/routeTree.gen.ts",
+      "dist/**/*",
       ".next/**/*"
     ]
   },

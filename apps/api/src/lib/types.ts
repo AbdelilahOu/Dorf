@@ -1,17 +1,15 @@
+import type { SelectSession, SelectUser } from "@/db/schema";
 import type { OpenAPIHono, RouteConfig, RouteHandler } from "@hono/zod-openapi";
 import type { PinoLogger } from "hono-pino";
-import type { auth } from "./auth";
 
 export type Variables = {
-  user: typeof auth.$Infer.Session.user | null;
-  session: typeof auth.$Infer.Session.session | null;
+  user: SelectUser | null;
+  session: SelectSession | null;
 };
 
 export type Bindings = {
-  AI: Ai;
   TURSO_CONNECTION_URL: string;
   TURSO_AUTH_TOKEN: string;
-  PRACTICE_AUDIO_GENERATOR: Workflow;
   LOGGER: PinoLogger;
 };
 

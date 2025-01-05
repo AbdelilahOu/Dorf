@@ -4,10 +4,10 @@
   "version": "0.1.0",
   "identifier": "com.dorf.dev",
   "build": {
-    "beforeBuildCommand": "bun run build:desktop",
+    "beforeBuildCommand": "bun run build:mobile",
     "beforeDevCommand": "bun run dev:internal-tauri",
     "devUrl": "http://localhost:3000",
-    "frontendDist": "../../apps/desktop/dist"
+    "frontendDist": "../../apps/mobile/dist"
   },
   "app": {
     "windows": [

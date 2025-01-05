@@ -6,7 +6,12 @@ const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [TanStackRouterVite({}), react()],
+  plugins: [
+    TanStackRouterVite({
+      enableRouteGeneration: false,
+    }),
+    react(),
+  ],
   clearScreen: false,
   server: {
     host: host || false,

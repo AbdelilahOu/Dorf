@@ -1,11 +1,23 @@
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
+import {
+  RouterProvider,
+  createRouter,
+} from "@tanstack/react-router";
 import "@dorf/ui/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NuqsAdapter } from "nuqs/adapters/react";
+import { rootRoute } from "./routes/__root";
+import { indexRoute } from "./routes";
+import { authLayoutRoute } from "./routes/auth/layout";
+import { signInRoute } from "./routes/auth/signin";
+import { signUpRoute } from "./routes/auth/signup";
 
 const queryClient = new QueryClient();
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  authLayoutRoute.addChildren([signInRoute, signUpRoute]),
+]);
 
 const router = createRouter({
   routeTree,

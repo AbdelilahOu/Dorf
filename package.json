@@ -1,18 +1,23 @@
 {
   "name": "dorf",
   "private": true,
-  "workspaces": ["packages/*", "apps/*", "tooling/*", "crates"],
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "tooling/*",
+    "crates"
+  ],
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "dev": "turbo dev --parallel",
-    "dev:internal-tauri": "bun run --filter @dorf/desktop dev",
-    "dev:desktop": "bun run tauri android dev",
+    "dev:internal-tauri": "bun run --filter @dorf/mobile dev",
+    "dev:mobile": "bun run tauri android dev",
     "dev:api": "turbo dev --filter=@dorf/api",
-    "start:desktop": "turbo start --filter=@dorf/desktop",
+    "start:mobile": "turbo start --filter=@dorf/mobile",
     "start:api": "turbo start --filter=@dorf/api",
-    "build:desktop": "turbo run --filter @dorf/desktop build --no-daemon",
+    "build:mobile": "turbo run --filter @dorf/mobile build --no-daemon",
     "tauri": "tauri",
     "test": "turbo test --parallel",
     "format": "biome format --write .",
