@@ -26,7 +26,7 @@ export const authMiddleware = createMiddleware(
 
 export function corsMiddleware() {
   return cors({
-    origin: "*",
+    origin: ["http://192.168.1.115:3000", "http://localhost:3003"],
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["POST", "GET", "OPTIONS"],
     exposeHeaders: ["Content-Length"],

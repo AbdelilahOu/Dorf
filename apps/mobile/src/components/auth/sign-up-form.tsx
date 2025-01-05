@@ -13,6 +13,9 @@ import {
 import { Input } from "@dorf/ui/input";
 import { Button } from "@dorf/ui/button";
 import { authClient } from "../../lib/auth-client";
+import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@dorf/ui/hooks/use-toast";
+import { useNavigate } from "@tanstack/react-router";
 
 const signUpSchema = z.object({
   name: z
@@ -27,6 +30,8 @@ const signUpSchema = z.object({
 type SignUpSchema = z.infer<typeof signUpSchema>;
 
 const SignUpForm: React.FC = () => {
+  const { toast } = useToast();
+
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -36,12 +41,34 @@ const SignUpForm: React.FC = () => {
     },
   });
 
-  const onSubmit = async ({ name, email, password }: SignUpSchema) => {
-    await authClient.signUp.email({
-      email,
-      name,
-      password,
-    });
+  const navigate = useNavigate({ from: "/auth/signup" });
+
+  const signUpMutation = useMutation({
+    mutationFn: async ({ name, email, password }: SignUpSchema) => {
+      return await authClient.signUp.email({
+        email,
+        name,
+        password,
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Sign up successful!",
+      });
+
+      navigate({ to: "/" });
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Failed to sign up. Please try again.",
+      });
+    },
+  });
+
+  const onSubmit = (data: SignUpSchema) => {
+    signUpMutation.mutate(data);
   };
 
   return (
@@ -87,7 +114,11 @@ const SignUpForm: React.FC = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={signUpMutation.isPending}
+        >
           Sign Up
         </Button>
       </form>

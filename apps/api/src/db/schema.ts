@@ -2,7 +2,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const usersTable = sqliteTable("users", {
+export const users = sqliteTable("users", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => createId()),
@@ -14,7 +14,7 @@ export const usersTable = sqliteTable("users", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
-export const sessionsTable = sqliteTable("sessions", {
+export const sessions = sqliteTable("sessions", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => createId()),
@@ -26,7 +26,7 @@ export const sessionsTable = sqliteTable("sessions", {
   userAgent: text("user_agent"),
   userId: text("user_id")
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => users.id),
 });
 
 export const accounts = sqliteTable("accounts", {
@@ -37,7 +37,7 @@ export const accounts = sqliteTable("accounts", {
   providerId: text("provider_id").notNull(),
   userId: text("user_id")
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => users.id),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   idToken: text("id_token"),
@@ -72,7 +72,7 @@ export const homesTable = sqliteTable("homes", {
   district: text("district").notNull(),
   headOfHousehold: text("head-of-household")
     .notNull()
-    .references(() => usersTable.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: "cascade" }),
   deleted: integer({ mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`(CURRENT_TIMESTAMP)`)
@@ -93,11 +93,11 @@ export const waterMeterReadingsTable = sqliteTable("water-meter-readings", {
   createdAt: text("created_at").default(sql`(CURRENT_TIMESTAMP)`).notNull(),
 });
 
-export type InsertUser = typeof usersTable.$inferInsert;
-export type SelectUser = typeof usersTable.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
+export type SelectUser = typeof users.$inferSelect;
 
-export type InsertSession = typeof sessionsTable.$inferInsert;
-export type SelectSession = typeof sessionsTable.$inferSelect;
+export type InsertSession = typeof sessions.$inferInsert;
+export type SelectSession = typeof sessions.$inferSelect;
 
 export type InsertAccount = typeof accounts.$inferInsert;
 export type SelectAccount = typeof accounts.$inferSelect;

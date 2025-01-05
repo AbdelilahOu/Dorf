@@ -13,6 +13,9 @@ import {
 import { Input } from "@dorf/ui/input";
 import { Button } from "@dorf/ui/button";
 import { authClient } from "../../lib/auth-client";
+import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@dorf/ui/hooks/use-toast";
+import { useNavigate } from "@tanstack/react-router";
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -24,6 +27,9 @@ const signInSchema = z.object({
 type SignInSchema = z.infer<typeof signInSchema>;
 
 const SignInForm: React.FC = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate({ from: "/auth/signin" });
+
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -32,11 +38,35 @@ const SignInForm: React.FC = () => {
     },
   });
 
-  const onSubmit = async ({ email, password }: SignInSchema) => {
-    await authClient.signIn.email({
-      email,
-      password,
-    });
+  const signInMutation = useMutation({
+    mutationFn: async ({ email, password }: SignInSchema) => {
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+      });
+      if (data && !error) {
+        return data;
+      }
+      throw error;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Sign in successful!",
+      });
+      navigate({ to: "/" });
+    },
+    onError: (error: any) => {
+      console.error("Signin error:", error);
+      toast({
+        variant: "destructive",
+        title: "Failed to sign in. Please try again.",
+        description: error.message, // Optional: Show error message
+      });
+    },
+  });
+
+  const onSubmit = (data: SignInSchema) => {
+    signInMutation.mutate(data);
   };
 
   return (
@@ -69,7 +99,11 @@ const SignInForm: React.FC = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={signInMutation.isPending}
+        >
           Sign In
         </Button>
       </form>
