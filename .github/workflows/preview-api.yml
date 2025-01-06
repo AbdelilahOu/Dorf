@@ -10,7 +10,7 @@ env:
 on:
   push:
     paths:
-      - apps/api/**
+      - "**"
 
 jobs:
   deploy-preview:
