@@ -2,10 +2,11 @@ name: Preview Deployment - API
 
 on:
   push:
-    branches:
-      - "preview"
+    branches-ignore:
+      - main
+      - production
     paths:
-      - "apps/api/**"
+      - apps/api/**
 
 jobs:
   deploy-preview:
