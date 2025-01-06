@@ -9,11 +9,10 @@ env:
 
 on:
   push:
-    branches-ignore:
-      - main
-      - production
+    branches:
+      - "preview"
     paths:
-      - apps/api/**
+      - "apps/api/**"
 
 jobs:
   deploy-preview:
