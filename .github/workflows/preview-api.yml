@@ -10,9 +10,9 @@ env:
 on:
   push:
     branches:
-      - "preview"
+      - 'preview'
     paths:
-      - "apps/api/**"
+      - 'apps/api/**'
 
 jobs:
   deploy-preview:
