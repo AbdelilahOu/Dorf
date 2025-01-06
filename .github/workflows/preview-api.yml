@@ -36,10 +36,6 @@ jobs:
         run: bun run check:types
         working-directory: ./apps/api
 
-      - name: Build the project
-        run: bun run build
-        working-directory: ./apps/api
-
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
