@@ -4,6 +4,8 @@ import { Input } from "@dorf/ui/input";
 
 import { useQueryState } from "nuqs";
 import { rootRoute } from "./__root";
+import { useQuery } from "@tanstack/react-query";
+import { fetch } from "@tauri-apps/plugin-http";
 
 export const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -12,14 +14,25 @@ export const indexRoute = createRoute({
 });
 
 function HomeComponent() {
-  const [name, setName] = useQueryState("name");
+  const { data, error } = useQuery({
+    queryKey: ["readings"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/readings`,
+        {
+          method: "GET",
+        },
+      );
+      if (response.status === 200) {
+        return await response.json();
+      }
+      throw new Error("new error");
+    },
+  });
   return (
     <>
-      <Input value={name || ""} onChange={(e) => setName(e.target.value)} />
-      <Button onClick={() => setName(null)}>Clear</Button>
-      <p>Hello, {name || "anonymous visitor"}!</p>
-      <Link to="/auth/signin">signin</Link>
-      <Link to="/auth/signup">signup</Link>
+      data: {JSON.stringify(data)}
+      error: {JSON.stringify(error)}
     </>
   );
 }

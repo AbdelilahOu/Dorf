@@ -16,6 +16,7 @@ import { authClient } from "../../lib/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -29,6 +30,8 @@ type SignInSchema = z.infer<typeof signInSchema>;
 const SignInForm: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate({ from: "/auth/signin" });
+
+  const [error, setError] = useState({});
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
@@ -57,10 +60,11 @@ const SignInForm: React.FC = () => {
     },
     onError: (error: any) => {
       console.error("Signin error:", error);
+      setError(error);
       toast({
         variant: "destructive",
         title: "Failed to sign in. Please try again.",
-        description: error.message, // Optional: Show error message
+        description: error,
       });
     },
   });
@@ -73,6 +77,7 @@ const SignInForm: React.FC = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <h2 className="mb-6 font-semibold text-2xl">Sign In</h2>
+        <div className="w-1/3 text-wrap">{JSON.stringify(error)}</div>
         <FormField
           control={form.control}
           name="email"
