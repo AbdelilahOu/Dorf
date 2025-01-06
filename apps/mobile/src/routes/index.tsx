@@ -1,11 +1,9 @@
-import { createRoute, Link } from "@tanstack/react-router";
-import { Button } from "@dorf/ui/button";
-import { Input } from "@dorf/ui/input";
-
-import { useQueryState } from "nuqs";
+import { createRoute, } from "@tanstack/react-router";
 import { rootRoute } from "./__root";
 import { useQuery } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
+import { useToast } from "@dorf/ui/hooks/use-toast";
+import Readings from "../components/readings/readings";
 
 export const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -14,6 +12,8 @@ export const indexRoute = createRoute({
 });
 
 function HomeComponent() {
+  const { toast } = useToast();
+
   const { data, error } = useQuery({
     queryKey: ["readings"],
     queryFn: async () => {
@@ -29,10 +29,12 @@ function HomeComponent() {
       throw new Error("new error");
     },
   });
-  return (
-    <>
-      data: {JSON.stringify(data)}
-      error: {JSON.stringify(error)}
-    </>
-  );
+
+  if (error) {
+    toast({
+      title: "error while getting readings",
+    });
+  }
+
+  return <Readings data={data} />;
 }
