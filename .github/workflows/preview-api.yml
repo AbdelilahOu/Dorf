@@ -12,7 +12,7 @@ on:
     branches:
       - preview
     paths:
-      - 'apps/api/**'
+      - apps/api/**
 
 jobs:
   deploy-preview:

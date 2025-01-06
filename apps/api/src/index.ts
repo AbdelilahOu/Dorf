@@ -21,7 +21,6 @@ app.on(["POST", "GET"], "/api/auth/**", (c) => {
   return setupAuth(c).handler(c.req.raw);
 });
 
-app.route("/homes", homes);
-app.route("readings", readings);
+app.route("/homes", homes).route("readings", readings);
 
 export default app;
