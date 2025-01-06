@@ -3,7 +3,7 @@ name: Preview Deployment - API
 on:
   push:
     branches:
-      - preview
+      - "preview"
     paths:
       - "apps/api/**"
 
