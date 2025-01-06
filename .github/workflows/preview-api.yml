@@ -45,7 +45,7 @@ jobs:
           workingDirectory: "apps/api"
           wranglerVersion: "3.99.0"
           command:
-            deploy --minify src/index.ts  --name=dorf-api-preview --env staging \
-            --var TURSO_CONNECTION_URL=${{ env.TURSO_CONNECTION_URL }} \
-            --var TURSO_AUTH_TOKEN=${{ env.TURSO_AUTH_TOKEN }} \
+            deploy --minify src/index.ts  --name=dorf-api-preview --env staging
+            --var TURSO_CONNECTION_URL=${{ env.TURSO_CONNECTION_URL }}
+            --var TURSO_AUTH_TOKEN=${{ env.TURSO_AUTH_TOKEN }}
             --var TRUSTED_ORIGINS=${{ env.TRUSTED_ORIGINS }}
