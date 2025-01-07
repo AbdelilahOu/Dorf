@@ -49,5 +49,7 @@ jobs:
           wranglerVersion: "3.99.0"
           command: deploy --minify src/index.ts --env production
             --var TURSO_CONNECTION_URL:${{ env.TURSO_CONNECTION_URL }}
-            TURSO_AUTH_TOKEN:${{ env.TURSO_AUTH_TOKEN }}
-            TRUSTED_ORIGINS:${{ env.TRUSTED_ORIGINS }}
+            --var TURSO_AUTH_TOKEN:${{ env.TURSO_AUTH_TOKEN }}
+            --var TRUSTED_ORIGINS:${{ env.TRUSTED_ORIGINS }}
+            --var BASE_URL:${{ env.BASE_URL }}
+

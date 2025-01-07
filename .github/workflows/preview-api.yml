@@ -51,3 +51,4 @@ jobs:
             --var TURSO_CONNECTION_URL:${{ env.TURSO_CONNECTION_URL }}
             --var TURSO_AUTH_TOKEN:${{ env.TURSO_AUTH_TOKEN }}
             --var TRUSTED_ORIGINS:${{ env.TRUSTED_ORIGINS }}
+            --var BASE_URL:${{ env.BASE_URL }}
