@@ -35,9 +35,9 @@ const SignUpForm: React.FC = () => {
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
+      name: "abdelilah ouaadouch",
+      email: "abdelilah@gmail.com",
+      password: "abdelilah@11",
     },
   });
 
@@ -45,11 +45,15 @@ const SignUpForm: React.FC = () => {
 
   const signUpMutation = useMutation({
     mutationFn: async ({ name, email, password }: SignUpSchema) => {
-      return await authClient.signUp.email({
+      const { data, error } = await authClient.signUp.email({
         email,
         name,
         password,
       });
+      if (error) {
+        throw error;
+      }
+      return data;
     },
     onSuccess: () => {
       toast({

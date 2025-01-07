@@ -1,11 +1,10 @@
-import { createId } from "@paralleldrive/cuid2";
 import { sql } from "drizzle-orm";
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("users", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => createId()),
+    .$defaultFn(() => sql`uuid4()`),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: integer("email_verified", { mode: "boolean" }).notNull(),
@@ -17,7 +16,7 @@ export const users = sqliteTable("users", {
 export const sessions = sqliteTable("sessions", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => createId()),
+    .$defaultFn(() => sql`uuid4()`),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
   token: text("token").notNull().unique(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
@@ -32,7 +31,7 @@ export const sessions = sqliteTable("sessions", {
 export const accounts = sqliteTable("accounts", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => createId()),
+    .$defaultFn(() => sql`uuid4()`),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
   userId: text("user_id")
@@ -56,7 +55,7 @@ export const accounts = sqliteTable("accounts", {
 export const verifications = sqliteTable("verifications", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => createId()),
+    .$defaultFn(() => sql`uuid4()`),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
@@ -67,7 +66,7 @@ export const verifications = sqliteTable("verifications", {
 export const homesTable = sqliteTable("homes", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => createId()),
+    .$defaultFn(() => sql`uuid4()`),
   waterMeterId: text("water-meter-id").notNull().unique(),
   district: text("district").notNull(),
   headOfHousehold: text("head-of-household")
@@ -82,10 +81,10 @@ export const homesTable = sqliteTable("homes", {
   ),
 });
 
-export const waterMeterReadingsTable = sqliteTable("water-meter-readings", {
+export const waterMeterReadingsTable = sqliteTable("water_meter_readings", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => createId()),
+    .$defaultFn(() => sql`uuid4()`),
   homeId: text("home_id")
     .notNull()
     .references(() => homesTable.id, { onDelete: "restrict" }),
