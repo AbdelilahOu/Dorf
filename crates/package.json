@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev": "bun --cwd ../ run dev:mobile",
     "dev:internal-tauri": "bun --cwd ../ dev:internal-tauri",
     "build:mobile": "bun --cwd ../ build:mobile"
   }
