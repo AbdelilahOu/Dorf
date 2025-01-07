@@ -6,6 +6,7 @@ env:
   TURSO_CONNECTION_URL: ${{ secrets.STAGING_TURSO_CONNECTION_URL }}
   TURSO_AUTH_TOKEN: ${{ secrets.STAGING_TURSO_AUTH_TOKEN }}
   TRUSTED_ORIGINS: ${{ secrets.TRUSTED_ORIGINS }}
+  BASE_URL: ${{ secrets.STAGING_BASE_URL }}
 
 on:
   push:

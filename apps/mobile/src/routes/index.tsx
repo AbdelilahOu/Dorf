@@ -1,10 +1,10 @@
-import { createRoute } from "@tanstack/react-router";
-import { rootRoute } from "./__root";
-import { useQuery } from "@tanstack/react-query";
-import { fetch } from "@tauri-apps/plugin-http";
 import { useToast } from "@dorf/ui/hooks/use-toast";
-import Readings from "../components/readings/readings";
+import { useQuery } from "@tanstack/react-query";
+import { createRoute } from "@tanstack/react-router";
+import { fetch } from "@tauri-apps/plugin-http";
 import { SERVER_URL } from "../../env";
+import Readings from "../components/readings/readings";
+import { rootRoute } from "./__root";
 
 export const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -36,8 +36,6 @@ function HomeComponent() {
 
   return (
     <div>
-      {JSON.stringify(data)}-{JSON.stringify(error)}
-      -----------------
       <Readings data={data} />
     </div>
   );

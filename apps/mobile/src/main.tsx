@@ -1,10 +1,11 @@
-import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import ReactDOM from "react-dom/client";
 import "@dorf/ui/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NuqsAdapter } from "nuqs/adapters/react";
-import { rootRoute } from "./routes/__root";
+import { DefaultErrorComponent } from "./components/error";
 import { indexRoute } from "./routes";
+import { rootRoute } from "./routes/__root";
 import { authLayoutRoute } from "./routes/auth/layout";
 import { signInRoute } from "./routes/auth/signin";
 import { signUpRoute } from "./routes/auth/signup";
@@ -20,6 +21,7 @@ const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   defaultPreloadStaleTime: 0,
+  defaultErrorComponent: DefaultErrorComponent,
   context: {
     queryClient,
   },

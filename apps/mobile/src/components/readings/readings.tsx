@@ -1,4 +1,6 @@
 function Readings({ data }: { data: any }) {
+  if (!data) return <></>;
+
   return (
     <div className="flex w-full flex-col space-y-2">
       {data.map((reading: any) => (

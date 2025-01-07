@@ -9,6 +9,7 @@ export function setupAuth(c: Context) {
   const tursoConnectionUrl = c.env["TURSO_CONNECTION_URL"];
   const tursoAuthToken = c.env["TURSO_AUTH_TOKEN"];
   const trustedOriginsString = c.env["TRUSTED_ORIGINS"];
+  const baseUrl = c.env["BASE_URL"];
 
   if (!tursoConnectionUrl || !tursoAuthToken) {
     throw new Error(
@@ -21,6 +22,8 @@ export function setupAuth(c: Context) {
   const trustedOrigins = trustedOriginsString?.split(",").filter(Boolean) || [];
 
   return betterAuth({
+    appName: "Dorf backend",
+    baseURL: baseUrl,
     trustedOrigins: trustedOrigins,
     database: drizzleAdapter(db, {
       provider: "sqlite",

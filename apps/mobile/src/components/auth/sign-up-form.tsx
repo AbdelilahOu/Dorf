@@ -1,7 +1,4 @@
-import type React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { Button } from "@dorf/ui/button";
 import {
   Form,
   FormControl,
@@ -10,12 +7,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@dorf/ui/form";
-import { Input } from "@dorf/ui/input";
-import { Button } from "@dorf/ui/button";
-import { authClient } from "../../lib/auth-client";
-import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@dorf/ui/hooks/use-toast";
+import { Input } from "@dorf/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import type React from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { authClient } from "../../lib/auth-client";
 
 const signUpSchema = z.object({
   name: z
@@ -63,6 +63,7 @@ const SignUpForm: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Failed to sign up. Please try again.",
+        description: JSON.stringify(error),
       });
     },
   });
