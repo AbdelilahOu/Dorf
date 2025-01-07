@@ -35,9 +35,9 @@ const SignUpForm: React.FC = () => {
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      name: "abdelilah ouaadouch",
-      email: "abdelilah@gmail.com",
-      password: "abdelilah@11",
+      name: "",
+      email: "",
+      password: "",
     },
   });
 
@@ -63,11 +63,10 @@ const SignUpForm: React.FC = () => {
       navigate({ to: "/" });
     },
     onError: (error) => {
-      console.log(error);
       toast({
         variant: "destructive",
         title: "Failed to sign up. Please try again.",
-        description: JSON.stringify(error),
+        description: error.message || "An unknown error occurred",
       });
     },
   });

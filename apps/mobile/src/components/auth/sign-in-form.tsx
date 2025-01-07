@@ -1,7 +1,4 @@
-import type React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { Button } from "@dorf/ui/button";
 import {
   Form,
   FormControl,
@@ -10,13 +7,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@dorf/ui/form";
-import { Input } from "@dorf/ui/input";
-import { Button } from "@dorf/ui/button";
-import { authClient } from "../../lib/auth-client";
-import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@dorf/ui/hooks/use-toast";
+import { Input } from "@dorf/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import type React from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { authClient } from "../../lib/auth-client";
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -29,9 +28,8 @@ type SignInSchema = z.infer<typeof signInSchema>;
 
 const SignInForm: React.FC = () => {
   const { toast } = useToast();
-  const navigate = useNavigate({ from: "/auth/signin" });
 
-  const [error, setError] = useState({});
+  const navigate = useNavigate({ from: "/auth/signin" });
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
@@ -59,12 +57,10 @@ const SignInForm: React.FC = () => {
       navigate({ to: "/" });
     },
     onError: (error: any) => {
-      console.error("Signin error:", error);
-      setError(error);
       toast({
         variant: "destructive",
         title: "Failed to sign in. Please try again.",
-        description: error,
+        description: error.message || "An unknown error occurred",
       });
     },
   });
@@ -77,7 +73,6 @@ const SignInForm: React.FC = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <h2 className="mb-6 font-semibold text-2xl">Sign In</h2>
-        <div className="w-1/3 text-wrap">{JSON.stringify(error)}</div>
         <FormField
           control={form.control}
           name="email"
