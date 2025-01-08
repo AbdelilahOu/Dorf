@@ -30,4 +30,8 @@ export default function configureOpenAPI(app: AppOpenAPI) {
       },
     }),
   );
+
+  app.get("/reference/auth", (c) => {
+    return c.redirect("/api/auth/reference");
+  });
 }

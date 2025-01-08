@@ -4,6 +4,8 @@ import { createRoute } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { SERVER_URL } from "../../env";
 import Readings from "../components/readings/readings";
+import { useSystemTray } from "../context";
+import { authClient } from "../lib/auth-client";
 import { rootRoute } from "./__root";
 
 export const indexRoute = createRoute({
@@ -14,6 +16,7 @@ export const indexRoute = createRoute({
 
 function HomeComponent() {
   const { toast } = useToast();
+  const { store } = useSystemTray();
 
   const { data, error } = useQuery({
     queryKey: ["readings"],
@@ -34,9 +37,49 @@ function HomeComponent() {
     retry: false,
   });
 
+  const { data: storeData } = useQuery({
+    queryKey: ["token"],
+    queryFn: async () => {
+      const [user, token] = await Promise.all([
+        store?.get("user"),
+        store?.get("cookies"),
+      ]);
+      return {
+        user,
+        token,
+      };
+    },
+    retry: false,
+  });
+
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data, error } = await authClient.getSession({
+        fetchOptions: {
+          headers: {
+            authorization: `Bearer ${storeData?.token}`,
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      if (data && !error) {
+        return data;
+      }
+    },
+    retry: false,
+    enabled: !!storeData?.token,
+  });
+
   return (
     <div>
+      ------------------------- token : {JSON.stringify(storeData?.token)}
+      ------------------------- session: {JSON.stringify(session)}
+      -------------------------
       <Readings data={data} />
+      -------------------------
     </div>
   );
 }

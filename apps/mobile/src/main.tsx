@@ -4,6 +4,8 @@ import "@dorf/ui/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import { DefaultErrorComponent } from "./components/error";
+import { SystemTrayContext } from "./context";
+import { setupStore } from "./lib/store";
 import { indexRoute } from "./routes";
 import { rootRoute } from "./routes/__root";
 import { authLayoutRoute } from "./routes/auth/layout";
@@ -38,10 +40,14 @@ const rootElement = document.getElementById("app")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
 
+  const store = setupStore();
+
   root.render(
     <QueryClientProvider client={queryClient}>
       <NuqsAdapter>
-        <RouterProvider router={router} />
+        <SystemTrayContext.Provider value={{ store }}>
+          <RouterProvider router={router} />
+        </SystemTrayContext.Provider>
       </NuqsAdapter>
     </QueryClientProvider>,
   );

@@ -2,7 +2,7 @@ import { createDatabaseConnection } from "@/db";
 import * as schema from "@/db/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { bearer } from "better-auth/plugins";
+import { bearer, openAPI } from "better-auth/plugins";
 import type { Context } from "hono";
 
 export function setupAuth(c: Context) {
@@ -40,6 +40,6 @@ export function setupAuth(c: Context) {
     emailAndPassword: {
       enabled: true,
     },
-    plugins: [bearer()],
+    plugins: [bearer(), openAPI()],
   });
 }

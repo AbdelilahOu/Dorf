@@ -15,6 +15,7 @@ import { useNavigate } from "@tanstack/react-router";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useSystemTray } from "../../context";
 import { authClient } from "../../lib/auth-client";
 
 const signUpSchema = z.object({
@@ -31,6 +32,7 @@ type SignUpSchema = z.infer<typeof signUpSchema>;
 
 const SignUpForm: React.FC = () => {
   const { toast } = useToast();
+  const { store } = useSystemTray();
 
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
@@ -55,7 +57,9 @@ const SignUpForm: React.FC = () => {
       }
       return data;
     },
-    onSuccess: () => {
+    onSuccess: async ({ token, user }) => {
+      // await store?.set("token", token);
+      // await store?.set("user", user);
       toast({
         title: "Sign up successful!",
       });

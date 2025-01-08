@@ -15,6 +15,7 @@ import { useNavigate } from "@tanstack/react-router";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useSystemTray } from "../../context";
 import { authClient } from "../../lib/auth-client";
 
 const signInSchema = z.object({
@@ -28,6 +29,7 @@ type SignInSchema = z.infer<typeof signInSchema>;
 
 const SignInForm: React.FC = () => {
   const { toast } = useToast();
+  const { store } = useSystemTray();
 
   const navigate = useNavigate({ from: "/auth/signin" });
 
@@ -50,7 +52,9 @@ const SignInForm: React.FC = () => {
       }
       throw error;
     },
-    onSuccess: () => {
+    onSuccess: async ({ token, user }) => {
+      // await store?.set("token", token);
+      // await store?.set("user", user);
       toast({
         title: "Sign in successful!",
       });
@@ -60,7 +64,7 @@ const SignInForm: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Failed to sign in. Please try again.",
-        description: error.message || "An unknown error occurred",
+        description: error || "An unknown error occurred",
       });
     },
   });
