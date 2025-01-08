@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useSystemTray } from "../../context";
 import { authClient } from "../../lib/auth-client";
+import { AuthErrorCodes } from "./AUTH_CODES";
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -46,11 +47,12 @@ const SignInForm: React.FC = () => {
       const { data, error } = await authClient.signIn.email({
         email,
         password,
+        rememberMe: true,
       });
-      if (data && !error) {
-        return data;
+      if (error) {
+        throw error;
       }
-      throw error;
+      return data;
     },
     onSuccess: async ({ token, user }) => {
       // await store?.set("token", token);
@@ -60,11 +62,12 @@ const SignInForm: React.FC = () => {
       });
       navigate({ to: "/" });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       toast({
         variant: "destructive",
-        title: "Failed to sign in. Please try again.",
-        description: error || "An unknown error occurred",
+        title:
+          AuthErrorCodes[error.message]?.ar ||
+          "Failed to sign in. Please try again.",
       });
     },
   });

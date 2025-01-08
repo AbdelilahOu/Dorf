@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useSystemTray } from "../../context";
 import { authClient } from "../../lib/auth-client";
+import { AuthErrorCodes } from "./AUTH_CODES";
 
 const signUpSchema = z.object({
   name: z
@@ -48,8 +49,8 @@ const SignUpForm: React.FC = () => {
   const signUpMutation = useMutation({
     mutationFn: async ({ name, email, password }: SignUpSchema) => {
       const { data, error } = await authClient.signUp.email({
-        email,
         name,
+        email,
         password,
       });
       if (error) {
@@ -69,8 +70,9 @@ const SignUpForm: React.FC = () => {
     onError: (error) => {
       toast({
         variant: "destructive",
-        title: "Failed to sign up. Please try again.",
-        description: error.message || "An unknown error occurred",
+        title:
+          AuthErrorCodes[error.message]?.ar ||
+          "Failed to sign in. Please try again.",
       });
     },
   });
