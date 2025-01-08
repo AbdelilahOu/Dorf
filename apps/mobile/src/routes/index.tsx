@@ -42,7 +42,7 @@ function HomeComponent() {
     queryFn: async () => {
       const [user, token] = await Promise.all([
         store?.get("user"),
-        store?.get("cookies"),
+        store?.get("token"),
       ]);
       return {
         user,
@@ -55,13 +55,7 @@ function HomeComponent() {
   const { data: session } = useQuery({
     queryKey: ["session"],
     queryFn: async () => {
-      const { data, error } = await authClient.getSession({
-        fetchOptions: {
-          headers: {
-            authorization: `Bearer ${storeData?.token}`,
-          },
-        },
-      });
+      const { data, error } = await authClient.getSession();
 
       if (error) throw error;
 
@@ -70,7 +64,6 @@ function HomeComponent() {
       }
     },
     retry: false,
-    enabled: !!storeData?.token,
   });
 
   return (

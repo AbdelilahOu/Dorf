@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useSystemTray } from "../../context";
 import { authClient } from "../../lib/auth-client";
-import { AuthErrorCodes } from "./AUTH_CODES";
+import { type AuthError, AuthErrorCodes } from "./AUTH_CODES";
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -55,18 +55,18 @@ const SignInForm: React.FC = () => {
       return data;
     },
     onSuccess: async ({ token, user }) => {
-      // await store?.set("token", token);
-      // await store?.set("user", user);
+      await store?.set("token", token);
+      await store?.set("user", user);
       toast({
         title: "Sign in successful!",
       });
       navigate({ to: "/" });
     },
-    onError: (error) => {
+    onError: (error: AuthError) => {
       toast({
         variant: "destructive",
         title:
-          AuthErrorCodes[error.message]?.ar ||
+          AuthErrorCodes[error?.code]?.ar ||
           "Failed to sign in. Please try again.",
       });
     },
