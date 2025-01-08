@@ -5,9 +5,11 @@ import { Outlet } from "@tanstack/react-router";
 import Navigation from "../components/navigation-bar";
 import { useSystemTray } from "../context";
 
-export const rootRoute = createRootRouteWithContext<{
+interface RouteContext {
   queryClient: QueryClient;
-}>()({
+}
+
+export const rootRoute = createRootRouteWithContext<RouteContext>()({
   component: RootComponent,
   beforeLoad: async ({ location }) => {
     const { store } = useSystemTray();
