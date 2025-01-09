@@ -4,7 +4,7 @@ import "@dorf/ui/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import { DefaultErrorComponent } from "./components/error";
-import { TauriApisContext } from "./context";
+import { TauriApisProvider } from "./context";
 import { setupStore } from "./lib/store";
 import { indexRoute } from "./routes";
 import { rootRoute } from "./routes/__root";
@@ -55,9 +55,9 @@ if (!rootElement.innerHTML) {
   root.render(
     <QueryClientProvider client={queryClient}>
       <NuqsAdapter>
-        <TauriApisContext.Provider value={{ store }}>
+        <TauriApisProvider value={{ store }}>
           <RouterProvider router={router} />
-        </TauriApisContext.Provider>
+        </TauriApisProvider>
       </NuqsAdapter>
     </QueryClientProvider>,
   );

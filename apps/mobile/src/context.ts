@@ -9,6 +9,8 @@ export const TauriApisContext = createContext<TauriApis>({
   store: null,
 });
 
+export const TauriApisProvider = TauriApisContext.Provider;
+
 export const useTauriApis = () => {
   return useContext(TauriApisContext);
 };
