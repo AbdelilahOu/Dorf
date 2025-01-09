@@ -52,7 +52,7 @@ function ReadingsComponent() {
   return (
     <div className="h-full w-full">
       <div className="mb-4 flex justify-end">
-        <Drawer>
+        <Drawer fixed={true}>
           <DrawerTrigger>Add reading</DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>

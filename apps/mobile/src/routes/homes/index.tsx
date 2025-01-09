@@ -52,7 +52,7 @@ function HomesComponent() {
   return (
     <div className="h-full w-full">
       <div className="mb-4 flex justify-end">
-        <Drawer>
+        <Drawer fixed={true}>
           <DrawerTrigger>Add home</DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
