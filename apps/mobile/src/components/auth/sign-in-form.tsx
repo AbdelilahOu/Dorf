@@ -15,9 +15,12 @@ import { useNavigate } from "@tanstack/react-router";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useSystemTray } from "../../context";
-import { authClient } from "../../lib/auth-client";
-import { type AuthError, AuthErrorCodes } from "./AUTH_CODES";
+import { useTauriApis } from "../../context";
+import {
+  type AuthError,
+  AuthErrorCodes,
+  authClient,
+} from "../../lib/auth-client";
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -30,7 +33,7 @@ type SignInSchema = z.infer<typeof signInSchema>;
 
 const SignInForm: React.FC = () => {
   const { toast } = useToast();
-  const { store } = useSystemTray();
+  const { store } = useTauriApis();
 
   const navigate = useNavigate({ from: "/auth/signin" });
 
@@ -79,7 +82,6 @@ const SignInForm: React.FC = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <h2 className="mb-6 font-semibold text-2xl">Sign In</h2>
         <FormField
           control={form.control}
           name="email"

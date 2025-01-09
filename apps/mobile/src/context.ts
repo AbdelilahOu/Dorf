@@ -5,10 +5,10 @@ interface TauriApis {
   store: null | LazyStore;
 }
 
-export const SystemTrayContext = createContext<TauriApis>({
+export const TauriApisContext = createContext<TauriApis>({
   store: null,
 });
 
-export const useSystemTray = () => {
-  return useContext(SystemTrayContext);
+export const useTauriApis = () => {
+  return useContext(TauriApisContext);
 };

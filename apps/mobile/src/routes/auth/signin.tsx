@@ -1,7 +1,7 @@
 import { createRoute } from "@tanstack/react-router";
-import { authLayoutRoute } from "./layout";
-import SignInForm from "../../components/auth/sign-in-form";
 import { Link } from "@tanstack/react-router";
+import SignInForm from "../../components/auth/sign-in-form";
+import { authLayoutRoute } from "./layout";
 
 export const signInRoute = createRoute({
   getParentRoute: () => authLayoutRoute,
@@ -11,11 +11,16 @@ export const signInRoute = createRoute({
 
 function SigninRouteComponent() {
   return (
-    <div>
-      <SignInForm />
-      <p>
-        if you dont have an account <Link to="/auth/signup">Register here</Link>
-      </p>
+    <div className="h-full w-full">
+      <div className="flex h-full w-full flex-col justify-center">
+        <SignInForm />
+        <p className="py-2">
+          {"if you dont have an account "}
+          <Link className="underline" to="/auth/signup">
+            Register here
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

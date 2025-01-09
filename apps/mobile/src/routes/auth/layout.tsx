@@ -1,4 +1,6 @@
-import { createRoute, Outlet } from "@tanstack/react-router";
+import { Button } from "@dorf/ui/button";
+import { Icons } from "@dorf/ui/icons";
+import { Outlet, createRoute } from "@tanstack/react-router";
 import { rootRoute } from "../__root";
 
 export const authLayoutRoute = createRoute({
@@ -9,7 +11,12 @@ export const authLayoutRoute = createRoute({
 
 function AuthLayoutRouteComponent() {
   return (
-    <div className="h-full w-full">
+    <div className="flex h-full w-full flex-col">
+      <div className="h-11 w-full">
+        <Button size={"icon"} variant={"ghost"}>
+          <Icons.ChevronLeft />
+        </Button>
+      </div>
       <Outlet />
     </div>
   );

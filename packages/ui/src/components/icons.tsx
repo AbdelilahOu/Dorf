@@ -4,33 +4,70 @@ import {
   BookOpen,
   BookOpenText,
   BookUp2,
+  Calendar,
   Check,
   ChevronLeft,
   ChevronRight,
+  CirclePlus,
   CircleUserRound,
   Command,
   Copy,
+  Database,
+  Droplet,
   FileText,
   FolderKanban,
+  Gauge,
   GraduationCap,
   Headphones,
   History,
+  HomeIcon,
+  KeyRound,
   LayoutGrid,
   LibraryBig,
+  List,
+  ListChecks,
   Loader2,
   LogOut,
   NotebookPen,
   PanelLeftClose,
   PanelLeftOpen,
   Pen,
-  Settings,
   Slash,
   Speech,
   Star,
+  User,
+  UserCog,
+  UserPlus,
   Users,
 } from "lucide-react";
 
 export const Icons = {
+  // User related icons
+  User: User,
+  Users: Users,
+  Profile: CircleUserRound,
+  UserAdd: UserPlus,
+  Settings: UserCog,
+
+  // Session related icons
+  Session: KeyRound, // represent session/token
+
+  // Account related icons
+  Account: Users, // Grouped icon for users
+
+  //Verification related icons
+  Verification: Check,
+  // Home Related icons
+  Home: HomeIcon,
+  Homes: LayoutGrid,
+  AddHome: CirclePlus,
+  //Water Meter Readings Related Icons
+  MeterReading: Droplet,
+  MeterReadings: List,
+  ReadingsHistory: ListChecks,
+  Dashboard: Gauge,
+
+  // General icons
   Learn: BookOpenText,
   Levels: BookUp2,
   Vocabulary: BookA,
@@ -43,7 +80,6 @@ export const Icons = {
   Exams: GraduationCap,
   SignOut: LogOut,
   Books: LibraryBig,
-  Profile: CircleUserRound,
   PanelLeftOpen,
   PanelLeftClose,
   Slash,
@@ -56,8 +92,8 @@ export const Icons = {
   FileText,
   FolderKanban,
   History,
-  LayoutGrid,
-  Settings,
   Star,
-  Users,
+  Add: CirclePlus,
+  Calendar: Calendar,
+  Database: Database,
 };
