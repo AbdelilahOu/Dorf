@@ -36,7 +36,7 @@ const createHomeSchema = z.object({
 
 type CreateHomeSchema = z.infer<typeof createHomeSchema>;
 
-const CreateHomeForm: React.FC = () => {
+export const CreateHomeForm: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -69,14 +69,10 @@ const CreateHomeForm: React.FC = () => {
   });
 
   const createHomeMutation = useMutation({
-    mutationFn: async ({
-      waterMeterId,
-      district,
-      headOfHousehold,
-    }: CreateHomeSchema) => {
+    mutationFn: async (NewHome: CreateHomeSchema) => {
       const response = await fetch(`${SERVER_URL}/homes`, {
         method: "POST",
-        body: JSON.stringify({ waterMeterId, district, headOfHousehold }),
+        body: JSON.stringify(NewHome),
       });
       if (response.status === 201 || response.status === 200) {
         return await response.json();
@@ -169,5 +165,3 @@ const CreateHomeForm: React.FC = () => {
     </Form>
   );
 };
-
-export default CreateHomeForm;

@@ -2,9 +2,9 @@ import { buttonVariants } from "@dorf/ui/button";
 import { Icons } from "@dorf/ui/icons";
 import { Link } from "@tanstack/react-router";
 
-function BottomNavigation() {
+export function BottomNavigation() {
   return (
-    <div className="flex min-h-10 items-center justify-between px-8 py-1">
+    <div className="fixed bottom-0 flex min-h-10 items-center justify-between px-8 py-1">
       <Link
         className={buttonVariants({
           size: "icon",
@@ -37,7 +37,7 @@ function BottomNavigation() {
           size: "icon",
           variant: "ghost",
         })}
-        to="/"
+        to="/profile"
       >
         <Icons.Profile />
       </Link>
@@ -53,5 +53,3 @@ function BottomNavigation() {
     </div>
   );
 }
-
-export default BottomNavigation;

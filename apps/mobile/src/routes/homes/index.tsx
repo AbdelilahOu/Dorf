@@ -8,12 +8,11 @@ import {
 } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { createRoute, useNavigate } from "@tanstack/react-router";
+import { createRoute } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { SERVER_URL } from "../../../env";
-import CreateHomeForm from "../../components/homes/create-home-form";
-import Homes from "../../components/homes/homes";
-import { useTauriApis } from "../../context";
+import { CreateHomeForm } from "../../components/homes/create-home-form";
+import { HomesTable } from "../../components/homes/homes-table";
 import { homesLayoutRoute } from "./layout";
 
 export const homesRoute = createRoute({
@@ -24,8 +23,6 @@ export const homesRoute = createRoute({
 
 function HomesComponent() {
   const { toast } = useToast();
-  const navigate = useNavigate();
-  const { store } = useTauriApis();
 
   const { data, error } = useQuery({
     queryKey: ["homes"],
@@ -65,7 +62,7 @@ function HomesComponent() {
           </DrawerContent>
         </Drawer>
       </div>
-      <Homes data={data} />
+      <HomesTable homes={data} />
     </div>
   );
 }

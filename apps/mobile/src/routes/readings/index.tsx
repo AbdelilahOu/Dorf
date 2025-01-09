@@ -11,8 +11,8 @@ import { useQuery } from "@tanstack/react-query";
 import { createRoute, useNavigate } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { SERVER_URL } from "../../../env";
-import CreateReadingForm from "../../components/readings/create-reading-form";
-import Readings from "../../components/readings/readings";
+import { CreateReadingForm } from "../../components/readings/create-reading-form";
+import { ReadingsTable } from "../../components/readings/readings-table";
 import { useTauriApis } from "../../context";
 import { readingsLayoutRoute } from "./layout";
 
@@ -65,7 +65,7 @@ function ReadingsComponent() {
           </DrawerContent>
         </Drawer>
       </div>
-      <Readings data={data} />
+      <ReadingsTable readings={data} />
     </div>
   );
 }

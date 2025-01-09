@@ -13,20 +13,21 @@ import { signInRoute } from "./routes/auth/signin";
 import { signUpRoute } from "./routes/auth/signup";
 import { homesRoute } from "./routes/homes";
 import { homesLayoutRoute } from "./routes/homes/layout";
+import { profileRoute } from "./routes/profile";
 import { readingsRoute } from "./routes/readings";
 import { readingsLayoutRoute } from "./routes/readings/layout";
+import { settingsRoute } from "./routes/settings";
 
 const queryClient = new QueryClient();
 const store = setupStore();
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  authLayoutRoute.addChildren([
-    signInRoute,
-    signUpRoute,
-    readingsLayoutRoute.addChildren([readingsRoute]),
-    homesLayoutRoute.addChildren([homesRoute]),
-  ]),
+  authLayoutRoute.addChildren([signInRoute, signUpRoute]),
+  readingsLayoutRoute.addChildren([readingsRoute]),
+  homesLayoutRoute.addChildren([homesRoute]),
+  profileRoute,
+  settingsRoute,
 ]);
 
 const router = createRouter({

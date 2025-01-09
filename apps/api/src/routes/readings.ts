@@ -11,7 +11,6 @@ const insertReadingSchema = z.object({
 });
 
 const updateReadingSchema = z.object({
-  homeId: z.string().optional(),
   amount: z.number().optional(),
 });
 

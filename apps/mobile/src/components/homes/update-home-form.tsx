@@ -35,7 +35,7 @@ const updateHomeSchema = z.object({
 
 type UpdateHomeSchema = z.infer<typeof updateHomeSchema>;
 
-const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
+export const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -202,5 +202,3 @@ const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
     </Form>
   );
 };
-
-export default UpdateHomeForm;

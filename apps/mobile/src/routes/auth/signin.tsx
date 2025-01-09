@@ -1,6 +1,6 @@
 import { createRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import SignInForm from "../../components/auth/sign-in-form";
+import { SignInForm } from "../../components/auth/sign-in-form";
 import { authLayoutRoute } from "./layout";
 
 export const signInRoute = createRoute({

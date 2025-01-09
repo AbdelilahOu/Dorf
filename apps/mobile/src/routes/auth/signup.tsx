@@ -1,5 +1,5 @@
 import { Link, createRoute } from "@tanstack/react-router";
-import SignUpForm from "../../components/auth/sign-up-form";
+import { SignUpForm } from "../../components/auth/sign-up-form";
 import { authLayoutRoute } from "./layout";
 
 export const signUpRoute = createRoute({

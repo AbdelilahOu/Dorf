@@ -29,7 +29,7 @@ const createReadingSchema = z.object({
 
 type CreateReadingSchema = z.infer<typeof createReadingSchema>;
 
-const CreateReadingForm: React.FC = () => {
+export const CreateReadingForm: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -130,5 +130,3 @@ const CreateReadingForm: React.FC = () => {
     </Form>
   );
 };
-
-export default CreateReadingForm;

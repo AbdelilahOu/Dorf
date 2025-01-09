@@ -31,7 +31,7 @@ const signInSchema = z.object({
 
 type SignInSchema = z.infer<typeof signInSchema>;
 
-const SignInForm: React.FC = () => {
+export const SignInForm: React.FC = () => {
   const { toast } = useToast();
   const { store } = useTauriApis();
 
@@ -119,5 +119,3 @@ const SignInForm: React.FC = () => {
     </Form>
   );
 };
-
-export default SignInForm;

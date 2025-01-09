@@ -26,7 +26,7 @@ const updateReadingSchema = z.object({
 
 type UpdateReadingSchema = z.infer<typeof updateReadingSchema>;
 
-const UpdateReadingForm: React.FC<{ id: string }> = ({ id }) => {
+export const UpdateReadingForm: React.FC<{ id: string }> = ({ id }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -129,5 +129,3 @@ const UpdateReadingForm: React.FC<{ id: string }> = ({ id }) => {
     </Form>
   );
 };
-
-export default UpdateReadingForm;

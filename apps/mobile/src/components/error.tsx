@@ -13,7 +13,6 @@ export function DefaultErrorComponent({ error }: { error: Error }) {
           support if the problem persists.
         </p>
 
-        {/* Optional: Show a more detailed message if available, but avoid revealing sensitive info */}
         {error.message && (
           <div className="mb-4 rounded border border-red-200 bg-red-100 p-2 text-red-500 ">
             <p className="font-medium">Error Details:</p>
