@@ -1,11 +1,11 @@
 import type { SelectUser } from "@dorf/api/src/db/schema";
 import { createRoute } from "@tanstack/react-router";
-import { rootRoute } from "../__root";
+import { appLayoutRoute } from "../app-layout";
 
-export const profileRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/profile",
-  component: ProfileComponent,
+export const settingsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/settings",
+  component: SettingsComponent,
   loader: async ({ context }) => {
     const [user, token] = await Promise.all([
       context.store.get<SelectUser>("user"),
@@ -18,8 +18,8 @@ export const profileRoute = createRoute({
   },
 });
 
-function ProfileComponent() {
-  const { user, token } = profileRoute.useLoaderData() as {
+function SettingsComponent() {
+  const { user, token } = settingsRoute.useLoaderData() as {
     user: SelectUser;
     token: string;
   };

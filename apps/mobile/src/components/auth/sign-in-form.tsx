@@ -10,7 +10,7 @@ import {
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import type React from "react";
 import { useForm } from "react-hook-form";
@@ -34,8 +34,9 @@ type SignInSchema = z.infer<typeof signInSchema>;
 export const SignInForm: React.FC = () => {
   const { toast } = useToast();
   const { store } = useTauriApis();
+  const queryClient = useQueryClient();
 
-  const navigate = useNavigate({ from: "/auth/signin" });
+  const navigate = useNavigate({ from: "/app/auth/signin" });
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
@@ -60,10 +61,12 @@ export const SignInForm: React.FC = () => {
     onSuccess: async ({ token, user }) => {
       await store?.set("token", token);
       await store?.set("user", user);
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
+
       toast({
         title: "Sign in successful!",
       });
-      navigate({ to: "/" });
+      navigate({ to: "/app" });
     },
     onError: (error: AuthError) => {
       toast({

@@ -8,27 +8,31 @@ import {
 } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { createRoute } from "@tanstack/react-router";
+import { createRoute, useNavigate } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
-import { SERVER_URL } from "../../../env";
-import { CreateHomeForm } from "../../components/homes/create-home-form";
-import { HomesTable } from "../../components/homes/homes-table";
-import { homesLayoutRoute } from "./layout";
+import { SERVER_URL } from "../../../../env";
+import { CreateReadingForm } from "../../../components/readings/create-reading-form";
+import { ReadingsTable } from "../../../components/readings/readings-table";
+import { useTauriApis } from "../../../context";
+import { appLayoutRoute } from "../app-layout";
+import { Button } from "@dorf/ui/button";
 
-export const homesRoute = createRoute({
-  getParentRoute: () => homesLayoutRoute,
-  path: "/",
-  component: HomesComponent,
+export const readingsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "readings",
+  component: ReadingsComponent,
 });
 
-function HomesComponent() {
+function ReadingsComponent() {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { store } = useTauriApis();
 
   const { data, error } = useQuery({
-    queryKey: ["homes"],
+    queryKey: ["readings"],
     queryFn: async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/homes/`, {
+        const response = await fetch(`${SERVER_URL}/readings/`, {
           method: "GET",
         });
         if (response.status === 200 || response.statusText === "OK") {
@@ -48,9 +52,11 @@ function HomesComponent() {
 
   return (
     <div className="h-full w-full">
-      <div className="mb-4 flex justify-end">
+      <div className="flex justify-end py-2">
         <Drawer fixed={true}>
-          <DrawerTrigger>Add home</DrawerTrigger>
+          <DrawerTrigger>
+            <Button>Add reading</Button>
+          </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle>Are you absolutely sure?</DrawerTitle>
@@ -58,11 +64,11 @@ function HomesComponent() {
                 This action cannot be undone.
               </DrawerDescription>
             </DrawerHeader>
-            <CreateHomeForm />
+            <CreateReadingForm />
           </DrawerContent>
         </Drawer>
       </div>
-      <HomesTable homes={data} />
+      <ReadingsTable data={data || []} />
     </div>
   );
 }

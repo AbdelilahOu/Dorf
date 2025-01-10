@@ -1,9 +1,9 @@
 import { createRoute } from "@tanstack/react-router";
-import { BarChartComponent } from "../components/overview/bar-chart";
-import { rootRoute } from "./__root";
+import { appLayoutRoute } from "./app-layout";
+import { BarChartComponent } from "../../components/overview/bar-chart";
 
 export const indexRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appLayoutRoute,
   path: "/",
   component: HomeComponent,
 });

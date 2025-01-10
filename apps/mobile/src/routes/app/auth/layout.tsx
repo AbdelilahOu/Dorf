@@ -1,8 +1,8 @@
 import { Outlet, createRoute } from "@tanstack/react-router";
-import { rootRoute } from "../__root";
+import { appLayoutRoute } from "../app-layout";
 
 export const authLayoutRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appLayoutRoute,
   path: "auth",
   component: AuthLayoutRouteComponent,
 });

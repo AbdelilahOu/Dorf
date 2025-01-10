@@ -20,4 +20,5 @@ export const Icons = {
   ChevronRight,
   ChevronLeft,
   Add: CirclePlus,
+  Logout: LogOut,
 };

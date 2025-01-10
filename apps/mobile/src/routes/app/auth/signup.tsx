@@ -1,5 +1,5 @@
 import { Link, createRoute } from "@tanstack/react-router";
-import { SignUpForm } from "../../components/auth/sign-up-form";
+import { SignUpForm } from "../../../components/auth/sign-up-form";
 import { authLayoutRoute } from "./layout";
 
 export const signUpRoute = createRoute({
@@ -15,7 +15,7 @@ function SignupRouteComponent() {
         <SignUpForm />
         <p className="py-2">
           {"if you have an account "}
-          <Link className="underline" to="/auth/signin">
+          <Link className="underline" to="/app/auth/signin">
             Signin here
           </Link>
         </p>

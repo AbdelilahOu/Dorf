@@ -6,28 +6,31 @@ import { NuqsAdapter } from "nuqs/adapters/react";
 import { DefaultErrorComponent } from "./components/error";
 import { TauriApisProvider } from "./context";
 import { setupStore } from "./lib/store";
-import { indexRoute } from "./routes";
+import { indexRoute } from "./routes/app";
 import { rootRoute } from "./routes/__root";
-import { authLayoutRoute } from "./routes/auth/layout";
-import { signInRoute } from "./routes/auth/signin";
-import { signUpRoute } from "./routes/auth/signup";
-import { homesRoute } from "./routes/homes";
-import { homesLayoutRoute } from "./routes/homes/layout";
-import { profileRoute } from "./routes/profile";
-import { readingsRoute } from "./routes/readings";
-import { readingsLayoutRoute } from "./routes/readings/layout";
-import { settingsRoute } from "./routes/settings";
+import { appLayoutRoute } from "./routes/app/app-layout";
+import { authLayoutRoute } from "./routes/app/auth/layout";
+import { signInRoute } from "./routes/app/auth/signin";
+import { signUpRoute } from "./routes/app/auth/signup";
+import { homesRoute } from "./routes/app/homes";
+import { profileRoute } from "./routes/app/profile";
+import { readingsRoute } from "./routes/app/readings";
+import { settingsRoute } from "./routes/app/settings";
+import { onBoardingRoute } from "./routes/onboarding";
 
 const queryClient = new QueryClient();
 const store = setupStore();
 
 const routeTree = rootRoute.addChildren([
-  indexRoute,
-  authLayoutRoute.addChildren([signInRoute, signUpRoute]),
-  readingsLayoutRoute.addChildren([readingsRoute]),
-  homesLayoutRoute.addChildren([homesRoute]),
-  profileRoute,
-  settingsRoute,
+  onBoardingRoute,
+  appLayoutRoute.addChildren([
+    indexRoute,
+    authLayoutRoute.addChildren([signInRoute, signUpRoute]),
+    readingsRoute,
+    homesRoute,
+    profileRoute,
+    settingsRoute,
+  ]),
 ]);
 
 const router = createRouter({
