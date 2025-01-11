@@ -25,7 +25,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
 
-const updateHomeSchema = z.object({
+const updateHouseSchema = z.object({
   waterMeterId: z.string().min(1, { message: "Water meter ID is required" }),
   district: z.string().min(1, { message: "District is required" }),
   headOfHousehold: z
@@ -33,14 +33,14 @@ const updateHomeSchema = z.object({
     .min(1, { message: "Head of household is required" }),
 });
 
-type UpdateHomeSchema = z.infer<typeof updateHomeSchema>;
+type UpdateHouseSchema = z.infer<typeof updateHouseSchema>;
 
-export const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
+export const UpdateHouseForm: React.FC<{ id: string }> = ({ id }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const form = useForm<UpdateHomeSchema>({
-    resolver: zodResolver(updateHomeSchema),
+  const form = useForm<UpdateHouseSchema>({
+    resolver: zodResolver(updateHouseSchema),
     defaultValues: {
       waterMeterId: "",
       district: "",
@@ -49,14 +49,14 @@ export const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
   });
 
   const {
-    data: home,
-    isPending: homeLoading,
-    error: homeError,
+    data: house,
+    isPending: houseLoading,
+    error: houseError,
   } = useQuery({
-    queryKey: ["home", id],
+    queryKey: ["house", id],
     queryFn: async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/homes/${id}`, {
+        const response = await fetch(`${SERVER_URL}/houses/${id}`, {
           method: "GET",
         });
         if (response.status === 200 || response.statusText === "OK") {
@@ -64,7 +64,7 @@ export const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
         }
         const data = await response.json();
         toast({ title: data.message, variant: "destructive" });
-        navigate({ to: "/homes" });
+        navigate({ to: "/houses" });
         return null;
       } catch (error) {
         console.error(error);
@@ -94,13 +94,13 @@ export const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
     retry: false,
   });
 
-  const updateHomeMutation = useMutation({
+  const updateHouseMutation = useMutation({
     mutationFn: async ({
       waterMeterId,
       district,
       headOfHousehold,
-    }: UpdateHomeSchema) => {
-      const response = await fetch(`${SERVER_URL}/homes/${id}`, {
+    }: UpdateHouseSchema) => {
+      const response = await fetch(`${SERVER_URL}/houses/${id}`, {
         method: "PUT",
         body: JSON.stringify({ waterMeterId, district, headOfHousehold }),
       });
@@ -111,8 +111,8 @@ export const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
       throw new Error(data.message);
     },
     onSuccess: () => {
-      toast({ title: "Home Updated" });
-      navigate({ to: "/homes" });
+      toast({ title: "House Updated" });
+      navigate({ to: "/houses" });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });
@@ -120,16 +120,16 @@ export const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
     },
   });
 
-  const onSubmit = (data: UpdateHomeSchema) => {
-    updateHomeMutation.mutate(data);
+  const onSubmit = (data: UpdateHouseSchema) => {
+    updateHouseMutation.mutate(data);
   };
 
-  if (homeLoading) {
-    return <p>Loading home...</p>;
+  if (houseLoading) {
+    return <p>Loading house...</p>;
   }
 
-  if (homeError || !home) {
-    return <p>Failed to load Home</p>;
+  if (houseError || !house) {
+    return <p>Failed to load House</p>;
   }
 
   return (
@@ -194,8 +194,8 @@ export const UpdateHomeForm: React.FC<{ id: string }> = ({ id }) => {
               close
             </Button>
           </DrawerClose>
-          <Button type="submit" disabled={updateHomeMutation.isPending}>
-            {updateHomeMutation.isPending ? "Updating..." : "Update Home"}
+          <Button type="submit" disabled={updateHouseMutation.isPending}>
+            {updateHouseMutation.isPending ? "Updating..." : "Update House"}
           </Button>
         </DrawerFooter>
       </form>

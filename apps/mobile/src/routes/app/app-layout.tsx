@@ -18,16 +18,17 @@ function AppLayoutRouteComponent() {
   const { data } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      return await store?.get<SelectUser>("user");
+      const user = await store?.get<SelectUser>("user");
+      return { user };
     },
   });
   return (
     <div className="grainy-light relative flex h-[100vh] flex-col">
-      <TopNavigation user={data} />
+      <TopNavigation user={data?.user} />
       <main className="h-full p-2">
         <Outlet />
       </main>
-      <BottomNavigation user={data} />
+      <BottomNavigation user={data?.user} />
       <Toaster />
     </div>
   );

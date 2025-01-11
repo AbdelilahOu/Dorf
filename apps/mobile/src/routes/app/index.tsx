@@ -5,10 +5,10 @@ import { BarChartComponent } from "../../components/overview/bar-chart";
 export const indexRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: "/",
-  component: HomeComponent,
+  component: HouseComponent,
 });
 
-function HomeComponent() {
+function HouseComponent() {
   return (
     <div className="h-full w-full">
       <BarChartComponent />

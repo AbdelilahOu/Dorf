@@ -13,14 +13,14 @@ import {
   TableHeader,
   TableRow,
 } from "@dorf/ui/table";
-import type { SelectHome } from "@dorf/api/src/db/schema";
+import type { SelectHouse } from "@dorf/api/src/db/schema";
 
-interface HomesTableProps<TData> {
+interface HousesTableProps<TData> {
   data: TData[];
 }
 
-export function HomesTable<TData>({ data }: HomesTableProps<TData>) {
-  const columns: ColumnDef<SelectHome>[] = [
+export function HousesTable<TData>({ data }: HousesTableProps<TData>) {
+  const columns: ColumnDef<SelectHouse>[] = [
     {
       accessorKey: "id",
       header: "ID",

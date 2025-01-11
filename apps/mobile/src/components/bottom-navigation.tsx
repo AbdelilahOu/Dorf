@@ -14,16 +14,16 @@ export function BottomNavigation({ user }: { user?: SelectUser }) {
         })}
         to="/app"
       >
-        <Icons.Home />
+        <Icons.House />
       </Link>
       <Link
         className={buttonVariants({
           size: "icon",
           variant: "ghost",
         })}
-        to="/app/homes"
+        to="/app/houses"
       >
-        <Icons.Homes />
+        <Icons.Houses />
       </Link>
       <Link
         className={buttonVariants({

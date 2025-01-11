@@ -11,25 +11,25 @@ import { useQuery } from "@tanstack/react-query";
 import { createRoute } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { SERVER_URL } from "../../../../env";
-import { CreateHomeForm } from "../../../components/homes/create-home-form";
-import { HomesTable } from "../../../components/homes/homes-table";
+import { CreateHouseForm } from "../../../components/houses/create-house-form";
+import { HousesTable } from "../../../components/houses/houses-table";
 import { appLayoutRoute } from "../app-layout";
 import { Button } from "@dorf/ui/button";
 
-export const homesRoute = createRoute({
+export const housesRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
-  path: "homes",
-  component: HomesComponent,
+  path: "houses",
+  component: HousesComponent,
 });
 
-function HomesComponent() {
+function HousesComponent() {
   const { toast } = useToast();
 
   const { data, error } = useQuery({
-    queryKey: ["homes"],
+    queryKey: ["houses"],
     queryFn: async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/homes/`, {
+        const response = await fetch(`${SERVER_URL}/houses/`, {
           method: "GET",
         });
         if (response.status === 200 || response.statusText === "OK") {
@@ -52,7 +52,7 @@ function HomesComponent() {
       <div className="flex justify-end py-2">
         <Drawer fixed={true}>
           <DrawerTrigger>
-            <Button>Add home</Button>
+            <Button>Add house</Button>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
@@ -61,11 +61,11 @@ function HomesComponent() {
                 This action cannot be undone.
               </DrawerDescription>
             </DrawerHeader>
-            <CreateHomeForm />
+            <CreateHouseForm />
           </DrawerContent>
         </Drawer>
       </div>
-      <HomesTable data={data || []} />
+      <HousesTable data={data || []} />
     </div>
   );
 }

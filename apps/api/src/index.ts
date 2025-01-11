@@ -6,7 +6,7 @@ import {
   corsMiddleware,
   pinoLoggerMiddleware,
 } from "@/middleware";
-import homes from "./routes/homes";
+import houses from "./routes/houses";
 import readings from "./routes/readings";
 
 const app = createApp();
@@ -21,7 +21,7 @@ app.on(["POST", "GET"], "/api/auth/**", (c) => {
   return setupAuth(c).handler(c.req.raw);
 });
 
-app.route("/homes", homes);
-app.route("readings", readings);
+app.route("/houses", houses);
+app.route("/readings", readings);
 
 export default app;

@@ -12,7 +12,7 @@ import { appLayoutRoute } from "./routes/app/app-layout";
 import { authLayoutRoute } from "./routes/app/auth/layout";
 import { signInRoute } from "./routes/app/auth/signin";
 import { signUpRoute } from "./routes/app/auth/signup";
-import { homesRoute } from "./routes/app/homes";
+import { housesRoute } from "./routes/app/houses";
 import { profileRoute } from "./routes/app/profile";
 import { readingsRoute } from "./routes/app/readings";
 import { settingsRoute } from "./routes/app/settings";
@@ -27,7 +27,7 @@ const routeTree = rootRoute.addChildren([
     indexRoute,
     authLayoutRoute.addChildren([signInRoute, signUpRoute]),
     readingsRoute,
-    homesRoute,
+    housesRoute,
     profileRoute,
     settingsRoute,
   ]),

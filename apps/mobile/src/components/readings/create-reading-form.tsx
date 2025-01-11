@@ -19,9 +19,9 @@ import * as z from "zod";
 import { SERVER_URL } from "../../../env";
 
 const createReadingSchema = z.object({
-  homeId: z.coerce
+  houseId: z.coerce
     .number()
-    .positive({ message: "Home ID must be a positive number" }),
+    .positive({ message: "House ID must be a positive number" }),
   amount: z.coerce
     .number()
     .positive({ message: "Amount must be a positive number" }),
@@ -36,16 +36,16 @@ export const CreateReadingForm: React.FC = () => {
   const form = useForm<CreateReadingSchema>({
     resolver: zodResolver(createReadingSchema),
     defaultValues: {
-      homeId: undefined,
+      houseId: undefined,
       amount: undefined,
     },
   });
 
-  const { data: homes } = useQuery({
-    queryKey: ["homes"],
+  const { data: houses } = useQuery({
+    queryKey: ["houses"],
     queryFn: async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/homes`, {
+        const response = await fetch(`${SERVER_URL}/houses`, {
           method: "GET",
         });
         if (response.status === 200 || response.statusText === "OK") {
@@ -61,10 +61,10 @@ export const CreateReadingForm: React.FC = () => {
   });
 
   const createReadingMutation = useMutation({
-    mutationFn: async ({ homeId, amount }: CreateReadingSchema) => {
+    mutationFn: async ({ houseId, amount }: CreateReadingSchema) => {
       const response = await fetch(`${SERVER_URL}/readings`, {
         method: "POST",
-        body: JSON.stringify({ homeId, amount }),
+        body: JSON.stringify({ houseId, amount }),
       });
       if (response.status === 201 || response.status === 200) {
         return await response.json();
@@ -92,12 +92,12 @@ export const CreateReadingForm: React.FC = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
         <FormField
           control={form.control}
-          name="homeId"
+          name="houseId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Home</FormLabel>
+              <FormLabel>House</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="Enter homeId" {...field} />
+                <Input type="number" placeholder="Enter houseId" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

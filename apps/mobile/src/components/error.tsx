@@ -26,7 +26,7 @@ export function DefaultErrorComponent({ error }: { error: Error }) {
             variant: "link",
           })}
         >
-          Go back home
+          Go back house
         </Link>
       </div>
     </div>

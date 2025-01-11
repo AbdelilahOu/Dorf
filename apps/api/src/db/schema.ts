@@ -63,15 +63,11 @@ export const verifications = sqliteTable("verifications", {
   updatedAt: integer("updated_at", { mode: "timestamp" }),
 });
 
-export const homesTable = sqliteTable("homes", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => sql`uuid4()`),
-  waterMeterId: text("water-meter-id").notNull().unique(),
+export const houses = sqliteTable("houses", {
+  waterMeterId: text("water-meter-id").notNull().primaryKey(),
+  name: text("house_name"),
   district: text("district").notNull(),
-  headOfHousehold: text("head-of-household")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+  headOfHousehold: text("head-of-household").references(() => users.id),
   deleted: integer({ mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" })
     .default(sql`(CURRENT_TIMESTAMP)`)
@@ -81,15 +77,20 @@ export const homesTable = sqliteTable("homes", {
   ),
 });
 
-export const waterMeterReadingsTable = sqliteTable("water_meter_readings", {
+export const waterMeterReadings = sqliteTable("water_meter_readings", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => sql`uuid4()`),
-  homeId: text("home_id")
+  waterMeterId: text("water_meter_id")
     .notNull()
-    .references(() => homesTable.id, { onDelete: "restrict" }),
+    .references(() => houses.waterMeterId, { onDelete: "restrict" }),
   amount: real("amount").notNull(),
-  createdAt: text("created_at").default(sql`(CURRENT_TIMESTAMP)`).notNull(),
+  readingDate: text("reading_date")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
 });
 
 export type InsertUser = typeof users.$inferInsert;
@@ -104,8 +105,8 @@ export type SelectAccount = typeof accounts.$inferSelect;
 export type InsertVerification = typeof verifications.$inferInsert;
 export type SelectVerification = typeof verifications.$inferSelect;
 
-export type InsertHome = typeof homesTable.$inferInsert;
-export type SelectHome = typeof homesTable.$inferSelect;
+export type InsertHouse = typeof houses.$inferInsert;
+export type SelectHouse = typeof houses.$inferSelect;
 
-export type InsertReading = typeof waterMeterReadingsTable.$inferInsert;
-export type SelectReading = typeof waterMeterReadingsTable.$inferSelect;
+export type InsertReading = typeof waterMeterReadings.$inferInsert;
+export type SelectReading = typeof waterMeterReadings.$inferSelect;

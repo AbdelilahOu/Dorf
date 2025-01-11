@@ -26,8 +26,8 @@ export function ReadingsTable<TData>({ data }: ReadingsTableProps<TData>) {
       header: "ID",
     },
     {
-      accessorKey: "homeId",
-      header: "Home",
+      accessorKey: "houseId",
+      header: "House",
     },
     {
       accessorKey: "createdAt",

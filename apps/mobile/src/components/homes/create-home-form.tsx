@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
 
-const createHomeSchema = z.object({
+const createHouseSchema = z.object({
   waterMeterId: z.string().min(1, { message: "Water meter ID is required" }),
   district: z.string().min(1, { message: "District is required" }),
   headOfHousehold: z
@@ -34,14 +34,14 @@ const createHomeSchema = z.object({
     .min(1, { message: "Head of household is required" }),
 });
 
-type CreateHomeSchema = z.infer<typeof createHomeSchema>;
+type CreateHouseSchema = z.infer<typeof createHouseSchema>;
 
-export const CreateHomeForm: React.FC = () => {
+export const CreateHouseForm: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const form = useForm<CreateHomeSchema>({
-    resolver: zodResolver(createHomeSchema),
+  const form = useForm<CreateHouseSchema>({
+    resolver: zodResolver(createHouseSchema),
     defaultValues: {
       waterMeterId: "",
       district: "",
@@ -68,11 +68,11 @@ export const CreateHomeForm: React.FC = () => {
     retry: false,
   });
 
-  const createHomeMutation = useMutation({
-    mutationFn: async (NewHome: CreateHomeSchema) => {
-      const response = await fetch(`${SERVER_URL}/homes`, {
+  const createHouseMutation = useMutation({
+    mutationFn: async (NewHouse: CreateHouseSchema) => {
+      const response = await fetch(`${SERVER_URL}/houses`, {
         method: "POST",
-        body: JSON.stringify(NewHome),
+        body: JSON.stringify(NewHouse),
       });
       if (response.status === 201 || response.status === 200) {
         return await response.json();
@@ -81,9 +81,9 @@ export const CreateHomeForm: React.FC = () => {
       throw new Error(data.message);
     },
     onSuccess: () => {
-      toast({ title: "Home Created" });
+      toast({ title: "House Created" });
       form.reset();
-      navigate({ to: "/homes" });
+      navigate({ to: "/houses" });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });
@@ -91,8 +91,8 @@ export const CreateHomeForm: React.FC = () => {
     },
   });
 
-  const onSubmit = (data: CreateHomeSchema) => {
-    createHomeMutation.mutate(data);
+  const onSubmit = (data: CreateHouseSchema) => {
+    createHouseMutation.mutate(data);
   };
 
   return (
@@ -157,8 +157,8 @@ export const CreateHomeForm: React.FC = () => {
               close
             </Button>
           </DrawerClose>
-          <Button type="submit" disabled={createHomeMutation.isPending}>
-            {createHomeMutation.isPending ? "Creating..." : "Create Home"}
+          <Button type="submit" disabled={createHouseMutation.isPending}>
+            {createHouseMutation.isPending ? "Creating..." : "Create House"}
           </Button>
         </DrawerFooter>
       </form>
