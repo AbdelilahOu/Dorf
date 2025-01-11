@@ -11,28 +11,27 @@ import {
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
 
-const createHouseSchema = z.object({
+const updateHouseSchema = z.object({
   waterMeterId: z.string().min(1, { message: "Water meter ID is required" }),
   district: z.string().min(1, { message: "District is required" }),
   name: z.string().min(1, { message: "Nmae of the house hold is required" }),
 });
 
-type CreateHouseSchema = z.infer<typeof createHouseSchema>;
+type UpdateHouseSchema = z.infer<typeof updateHouseSchema>;
 
-export const CreateHouseForm: React.FC = () => {
+export const UpdateHouseForm: React.FC<{ id: string }> = ({ id }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const form = useForm<CreateHouseSchema>({
-    resolver: zodResolver(createHouseSchema),
+  const form = useForm<UpdateHouseSchema>({
+    resolver: zodResolver(updateHouseSchema),
     defaultValues: {
       waterMeterId: "",
       district: "",
@@ -40,41 +39,48 @@ export const CreateHouseForm: React.FC = () => {
     },
   });
 
-  const { data: users } = useQuery({
-    queryKey: ["users"],
+  const {
+    data: house,
+    isPending: houseLoading,
+    error: houseError,
+  } = useQuery({
+    queryKey: ["house", id],
     queryFn: async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/users`, {
+        const response = await fetch(`${SERVER_URL}/houses/${id}`, {
           method: "GET",
         });
-        if (response.status === 201 || response.statusText === "OK") {
+        if (response.status === 200 || response.statusText === "OK") {
           return await response.json();
         }
-        return [];
+        const data = await response.json();
+        toast({ title: data.message, variant: "destructive" });
+        navigate({ to: "/app/houses" });
+        return null;
       } catch (error) {
-        console.log(error);
-        return [];
+        console.error(error);
+        toast({ title: `Error: ${error}`, variant: "destructive" });
+        return null;
       }
     },
-    retry: false,
+    enabled: !!id,
   });
 
-  const createHouseMutation = useMutation({
-    mutationFn: async (NewHouse: CreateHouseSchema) => {
-      const response = await fetch(`${SERVER_URL}/houses`, {
-        method: "POST",
-        body: JSON.stringify(NewHouse),
+  const updateHouseMutation = useMutation({
+    mutationFn: async (updateHouse: UpdateHouseSchema) => {
+      const response = await fetch(`${SERVER_URL}/houses/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(updateHouse),
       });
-      if (response.status === 201 || response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         return await response.json();
       }
       const data = await response.json();
       throw new Error(data.message);
     },
     onSuccess: () => {
-      toast({ title: "House Created" });
-      form.reset();
-      navigate({ to: "/houses" });
+      toast({ title: "House Updated" });
+      navigate({ to: "/app/houses" });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });
@@ -82,13 +88,21 @@ export const CreateHouseForm: React.FC = () => {
     },
   });
 
-  const onSubmit = (data: CreateHouseSchema) => {
-    createHouseMutation.mutate(data);
+  const onSubmit = (data: UpdateHouseSchema) => {
+    updateHouseMutation.mutate(data);
   };
+
+  if (houseLoading) {
+    return <p>Loading house...</p>;
+  }
+
+  if (houseError || !house) {
+    return <p>Failed to load House</p>;
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="waterMeterId"
@@ -134,8 +148,8 @@ export const CreateHouseForm: React.FC = () => {
               close
             </Button>
           </DrawerClose>
-          <Button type="submit" disabled={createHouseMutation.isPending}>
-            {createHouseMutation.isPending ? "Creating..." : "Create House"}
+          <Button type="submit" disabled={updateHouseMutation.isPending}>
+            {updateHouseMutation.isPending ? "Updating..." : "Update House"}
           </Button>
         </DrawerFooter>
       </form>
