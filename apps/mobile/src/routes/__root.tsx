@@ -49,7 +49,7 @@ export const rootRoute = createRootRouteWithContext<RouteContext>()({
 function RootComponent() {
   return (
     <>
-      <div className="grainy-light relative flex h-[100vh] flex-col">
+      <div className="bg-slate-50 relative flex h-[100vh] flex-col">
         <main className="h-full">
           <Outlet />
         </main>
