@@ -1,8 +1,8 @@
 import { createDatabaseConnection } from "@/db";
-import { waterMeterReadings, houses, users } from "@/db/schema";
+import { houses, users, waterMeterReadings } from "@/db/schema";
 import { createRouter } from "@/lib/create-app";
 import { createRoute } from "@hono/zod-openapi";
-import { eq, sql, and } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 const insertReadingSchema = z.object({

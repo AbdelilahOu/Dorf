@@ -105,12 +105,8 @@
           "name": "accounts_user_id_users_id_fk",
           "tableFrom": "accounts",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -180,12 +176,8 @@
           "name": "houses_head-of-household_users_id_fk",
           "tableFrom": "houses",
           "tableTo": "users",
-          "columnsFrom": [
-            "head-of-household"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["head-of-household"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -257,9 +249,7 @@
       "indexes": {
         "sessions_token_unique": {
           "name": "sessions_token_unique",
-          "columns": [
-            "token"
-          ],
+          "columns": ["token"],
           "isUnique": true
         }
       },
@@ -268,12 +258,8 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -338,9 +324,7 @@
       "indexes": {
         "users_email_unique": {
           "name": "users_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },
@@ -448,12 +432,8 @@
           "name": "water_meter_readings_water_meter_id_houses_water-meter-id_fk",
           "tableFrom": "water_meter_readings",
           "tableTo": "houses",
-          "columnsFrom": [
-            "water_meter_id"
-          ],
-          "columnsTo": [
-            "water-meter-id"
-          ],
+          "columnsFrom": ["water_meter_id"],
+          "columnsTo": ["water-meter-id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }

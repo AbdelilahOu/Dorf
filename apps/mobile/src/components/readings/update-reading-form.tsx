@@ -11,7 +11,7 @@ import {
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
@@ -35,33 +35,6 @@ export const UpdateReadingForm: React.FC<{ id: string }> = ({ id }) => {
     defaultValues: {
       amount: undefined,
     },
-  });
-
-  const {
-    data: reading,
-    isPending: readingLoading,
-    error: readingError,
-  } = useQuery({
-    queryKey: ["reading", id],
-    queryFn: async () => {
-      try {
-        const response = await fetch(`${SERVER_URL}/readings/${id}`, {
-          method: "GET",
-        });
-        if (response.status === 200 || response.statusText === "OK") {
-          return await response.json();
-        }
-        const data = await response.json();
-        toast({ title: data.message, variant: "destructive" });
-        navigate({ to: "/" });
-        return null;
-      } catch (error) {
-        console.error(error);
-        toast({ title: `Error: ${error}`, variant: "destructive" });
-        return null;
-      }
-    },
-    enabled: !!id,
   });
 
   const updateReadingMutation = useMutation({
@@ -89,14 +62,6 @@ export const UpdateReadingForm: React.FC<{ id: string }> = ({ id }) => {
   const onSubmit = (data: UpdateReadingSchema) => {
     updateReadingMutation.mutate(data);
   };
-
-  if (readingLoading) {
-    return <p>Loading reading...</p>;
-  }
-
-  if (readingError || !reading) {
-    return <p>Failed to load Reading</p>;
-  }
 
   return (
     <Form {...form}>

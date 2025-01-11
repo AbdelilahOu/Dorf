@@ -22,20 +22,28 @@ interface ReadingsTableProps<TData> {
 export function ReadingsTable<TData>({ data }: ReadingsTableProps<TData>) {
   const columns: ColumnDef<SelectReading>[] = [
     {
-      accessorKey: "id",
-      header: "ID",
-    },
-    {
-      accessorKey: "houseId",
-      header: "House",
-    },
-    {
-      accessorKey: "createdAt",
-      header: "Date",
+      accessorKey: "waterMeterId",
+      header: "Meter Id",
     },
     {
       accessorKey: "amount",
       header: "Amount",
+    },
+    {
+      accessorKey: "readingDate",
+      header: "Month",
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+    },
+    {
+      accessorKey: "houseName",
+      header: "House name",
+    },
+    {
+      accessorKey: "headOfHousehold",
+      header: "House owner",
     },
   ];
   const table = useReactTable({

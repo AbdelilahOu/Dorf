@@ -10,13 +10,6 @@ import {
 } from "@dorf/ui/form";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@dorf/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
@@ -28,9 +21,7 @@ import { SERVER_URL } from "../../../env";
 const updateHouseSchema = z.object({
   waterMeterId: z.string().min(1, { message: "Water meter ID is required" }),
   district: z.string().min(1, { message: "District is required" }),
-  headOfHousehold: z
-    .string()
-    .min(1, { message: "Head of household is required" }),
+  name: z.string().min(1, { message: "Nmae of the house hold is required" }),
 });
 
 type UpdateHouseSchema = z.infer<typeof updateHouseSchema>;
@@ -44,7 +35,7 @@ export const UpdateHouseForm: React.FC<{ id: string }> = ({ id }) => {
     defaultValues: {
       waterMeterId: "",
       district: "",
-      headOfHousehold: "",
+      name: "",
     },
   });
 
@@ -95,14 +86,10 @@ export const UpdateHouseForm: React.FC<{ id: string }> = ({ id }) => {
   });
 
   const updateHouseMutation = useMutation({
-    mutationFn: async ({
-      waterMeterId,
-      district,
-      headOfHousehold,
-    }: UpdateHouseSchema) => {
+    mutationFn: async (updateHouse: UpdateHouseSchema) => {
       const response = await fetch(`${SERVER_URL}/houses/${id}`, {
         method: "PUT",
-        body: JSON.stringify({ waterMeterId, district, headOfHousehold }),
+        body: JSON.stringify(updateHouse),
       });
       if (response.status === 200 || response.status === 201) {
         return await response.json();
@@ -163,26 +150,12 @@ export const UpdateHouseForm: React.FC<{ id: string }> = ({ id }) => {
         />
         <FormField
           control={form.control}
-          name="headOfHousehold"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Head of Household</FormLabel>
+              <FormLabel>Name of the house</FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a user" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {users?.map((user: { id: string; name: string }) => (
-                      <SelectItem key={user.id} value={user.id}>
-                        {user.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input placeholder="Enter House name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

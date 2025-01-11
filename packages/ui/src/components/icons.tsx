@@ -1,4 +1,5 @@
 import {
+  CalendarIcon,
   ChevronLeft,
   ChevronRight,
   CirclePlus,
@@ -21,4 +22,5 @@ export const Icons = {
   ChevronLeft,
   Add: CirclePlus,
   Logout: LogOut,
+  Calendar: CalendarIcon,
 };

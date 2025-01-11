@@ -22,20 +22,24 @@ interface HousesTableProps<TData> {
 export function HousesTable<TData>({ data }: HousesTableProps<TData>) {
   const columns: ColumnDef<SelectHouse>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "waterMeterId",
       header: "ID",
     },
     {
-      accessorKey: "waterMeterId",
-      header: "Water Meter",
+      accessorKey: "name",
+      header: "House name",
+    },
+    {
+      accessorKey: "district",
+      header: "District",
+    },
+    {
+      accessorKey: "headOfHousehold",
+      header: "Owner name",
     },
     {
       accessorKey: "createdAt",
       header: "Date",
-    },
-    {
-      accessorKey: "headOfHousehold",
-      header: "Owner",
     },
   ];
   const table = useReactTable({

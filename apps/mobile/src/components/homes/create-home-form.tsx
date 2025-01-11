@@ -10,13 +10,6 @@ import {
 } from "@dorf/ui/form";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@dorf/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
@@ -29,9 +22,7 @@ import { SERVER_URL } from "../../../env";
 const createHouseSchema = z.object({
   waterMeterId: z.string().min(1, { message: "Water meter ID is required" }),
   district: z.string().min(1, { message: "District is required" }),
-  headOfHousehold: z
-    .string()
-    .min(1, { message: "Head of household is required" }),
+  name: z.string().min(1, { message: "Nmae of the house hold is required" }),
 });
 
 type CreateHouseSchema = z.infer<typeof createHouseSchema>;
@@ -45,7 +36,7 @@ export const CreateHouseForm: React.FC = () => {
     defaultValues: {
       waterMeterId: "",
       district: "",
-      headOfHousehold: "",
+      name: "",
     },
   });
 
@@ -56,7 +47,7 @@ export const CreateHouseForm: React.FC = () => {
         const response = await fetch(`${SERVER_URL}/users`, {
           method: "GET",
         });
-        if (response.status === 200 || response.statusText === "OK") {
+        if (response.status === 201 || response.statusText === "OK") {
           return await response.json();
         }
         return [];
@@ -126,26 +117,12 @@ export const CreateHouseForm: React.FC = () => {
         />
         <FormField
           control={form.control}
-          name="headOfHousehold"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Head of Household</FormLabel>
+              <FormLabel>Name of the house</FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a user" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {users?.map((user: { id: string; name: string }) => (
-                      <SelectItem key={user.id} value={user.id}>
-                        {user.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input placeholder="Enter House name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

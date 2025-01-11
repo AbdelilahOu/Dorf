@@ -85,12 +85,8 @@ export const waterMeterReadings = sqliteTable("water_meter_readings", {
     .notNull()
     .references(() => houses.waterMeterId, { onDelete: "restrict" }),
   amount: real("amount").notNull(),
-  readingDate: text("reading_date")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
-  createdAt: text("created_at")
-    .default(sql`(CURRENT_TIMESTAMP)`)
-    .notNull(),
+  readingDate: text("reading_date").notNull().default(sql`CURRENT_TIMESTAMP`),
+  createdAt: text("created_at").default(sql`(CURRENT_TIMESTAMP)`).notNull(),
 });
 
 export type InsertUser = typeof users.$inferInsert;
@@ -106,7 +102,9 @@ export type InsertVerification = typeof verifications.$inferInsert;
 export type SelectVerification = typeof verifications.$inferSelect;
 
 export type InsertHouse = typeof houses.$inferInsert;
-export type SelectHouse = typeof houses.$inferSelect;
+export type SelectHouse = typeof houses.$inferSelect & {
+  headOfHousehold: string;
+};
 
 export type InsertReading = typeof waterMeterReadings.$inferInsert;
 export type SelectReading = typeof waterMeterReadings.$inferSelect;
