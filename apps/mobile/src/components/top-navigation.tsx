@@ -4,6 +4,7 @@ import { useTauriApis } from "../context";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import type { SelectUser } from "@dorf/api/src/db/schema";
 import { useQueryClient } from "@tanstack/react-query";
+import { authClient } from "../lib/auth-client";
 
 export function TopNavigation({ user }: { user?: SelectUser }) {
   const { store } = useTauriApis();
@@ -14,6 +15,7 @@ export function TopNavigation({ user }: { user?: SelectUser }) {
   const handleLogOut = async () => {
     await Promise.all([store?.delete("token"), store?.delete("user")]);
     await queryClient.invalidateQueries({ queryKey: ["user"] });
+    await authClient.signOut();
     navigate({ to: "/onboarding" });
   };
 

@@ -2,7 +2,7 @@
   "name": "@dorf/api",
   "version": "0.1.0",
   "scripts": {
-    "dev": "NODE_ENV=development wrangler dev src/index.ts --ip 192.168.139.70 --port 3003",
+    "dev": "NODE_ENV=development wrangler dev src/index.ts --ip 192.168.1.115 --port 3003",
     "deploy": "wrangler deploy --minify src/index.ts",
     "db:generate": "bunx drizzle-kit generate",
     "db:migrate": "bunx drizzle-kit migrate",
