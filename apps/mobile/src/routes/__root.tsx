@@ -11,21 +11,20 @@ interface RouteContext {
   store: LazyStore;
 }
 
+const PUBLIC_PAGES = ["/app/auth", "/onboarding"];
+
 export const rootRoute = createRootRouteWithContext<RouteContext>()({
-  component: RootComponent,
   beforeLoad: async ({ location, context }) => {
-    if (location.pathname === "/") {
+    const { pathname, href } = location;
+    if (pathname === "/") {
       throw redirect({
         to: "/app",
         search: {
-          redirect: location.href,
+          redirect: href,
         },
       });
     }
-    if (
-      !location.pathname.startsWith("/app/auth") &&
-      !location.pathname.startsWith("/onboarding")
-    ) {
+    if (!PUBLIC_PAGES.includes(pathname)) {
       const [token, user] = await Promise.allSettled([
         context.store.get<string>("token"),
         context.store.get<SelectUser>("user"),
@@ -38,23 +37,22 @@ export const rootRoute = createRootRouteWithContext<RouteContext>()({
         throw redirect({
           to: "/onboarding",
           search: {
-            redirect: location.href,
+            redirect: href,
           },
         });
       }
     }
   },
+  component: () => {
+    return (
+      <>
+        <div className="relative flex h-[100vh] flex-col bg-slate-50">
+          <main className="h-full">
+            <Outlet />
+          </main>
+          <Toaster />
+        </div>
+      </>
+    );
+  },
 });
-
-function RootComponent() {
-  return (
-    <>
-      <div className="bg-slate-50 relative flex h-[100vh] flex-col">
-        <main className="h-full">
-          <Outlet />
-        </main>
-        <Toaster />
-      </div>
-    </>
-  );
-}
