@@ -14,7 +14,6 @@ import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -36,7 +35,6 @@ type CreateReadingSchema = z.infer<typeof createReadingSchema>;
 
 export const CreateReadingForm: React.FC = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const form = useForm<CreateReadingSchema>({
     resolver: zodResolver(createReadingSchema),
@@ -52,16 +50,14 @@ export const CreateReadingForm: React.FC = () => {
         method: "POST",
         body: JSON.stringify({ waterMeterId, amount }),
       });
-      if (response.status === 201 || response.status === 200) {
-        return await response.json();
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message);
       }
-      const data = await response.json();
-      throw new Error(data.message);
     },
     onSuccess: () => {
       toast({ title: "Reading Created" });
       form.reset();
-      navigate({ to: "/" });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });

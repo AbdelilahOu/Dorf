@@ -12,7 +12,6 @@ import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -28,7 +27,6 @@ type UpdateHouseSchema = z.infer<typeof updateHouseSchema>;
 
 export const UpdateHouseForm: React.FC<{ id: string }> = ({ id }) => {
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const form = useForm<UpdateHouseSchema>({
     resolver: zodResolver(updateHouseSchema),
@@ -50,17 +48,15 @@ export const UpdateHouseForm: React.FC<{ id: string }> = ({ id }) => {
         const response = await fetch(`${SERVER_URL}/houses/${id}`, {
           method: "GET",
         });
-        if (response.status === 200 || response.statusText === "OK") {
-          return await response.json();
+        if (!response.ok) {
+          const message = await response.text();
+          throw new Error(message);
         }
         const data = await response.json();
-        toast({ title: data.message, variant: "destructive" });
-        navigate({ to: "/app/houses" });
-        return null;
+        return data;
       } catch (error) {
-        console.error(error);
         toast({ title: `Error: ${error}`, variant: "destructive" });
-        return null;
+        return {};
       }
     },
     enabled: !!id,
@@ -72,19 +68,16 @@ export const UpdateHouseForm: React.FC<{ id: string }> = ({ id }) => {
         method: "PUT",
         body: JSON.stringify(updateHouse),
       });
-      if (response.status === 200 || response.status === 201) {
-        return await response.json();
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message);
       }
-      const data = await response.json();
-      throw new Error(data.message);
     },
     onSuccess: () => {
       toast({ title: "House Updated" });
-      navigate({ to: "/app/houses" });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });
-      console.error(error);
     },
   });
 

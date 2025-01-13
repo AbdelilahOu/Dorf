@@ -12,7 +12,6 @@ import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -28,7 +27,6 @@ type CreateHouseSchema = z.infer<typeof createHouseSchema>;
 
 export const CreateHouseForm: React.FC = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const form = useForm<CreateHouseSchema>({
     resolver: zodResolver(createHouseSchema),
@@ -45,20 +43,17 @@ export const CreateHouseForm: React.FC = () => {
         method: "POST",
         body: JSON.stringify(NewHouse),
       });
-      if (response.status === 201 || response.status === 200) {
-        return await response.json();
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message);
       }
-      const data = await response.json();
-      throw new Error(data.message);
     },
     onSuccess: () => {
       toast({ title: "House Created" });
       form.reset();
-      navigate({ to: "/app/houses" });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });
-      console.error(error);
     },
   });
 

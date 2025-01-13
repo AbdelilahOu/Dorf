@@ -12,7 +12,6 @@ import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -28,7 +27,6 @@ type UpdateReadingSchema = z.infer<typeof updateReadingSchema>;
 
 export const UpdateReadingForm: React.FC<{ id: string }> = ({ id }) => {
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const form = useForm<UpdateReadingSchema>({
     resolver: zodResolver(updateReadingSchema),
@@ -43,19 +41,16 @@ export const UpdateReadingForm: React.FC<{ id: string }> = ({ id }) => {
         method: "PUT",
         body: JSON.stringify({ amount }),
       });
-      if (response.status === 200 || response.status === 201) {
-        return await response.json();
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message);
       }
-      const data = await response.json();
-      throw new Error(data.message);
     },
     onSuccess: () => {
       toast({ title: "Reading Updated" });
-      navigate({ to: "/" });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });
-      console.error(error);
     },
   });
 
