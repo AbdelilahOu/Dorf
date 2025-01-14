@@ -9,6 +9,7 @@ import {
   List,
   LogOut,
   UserCog,
+  MoreHorizontal,
 } from "lucide-react";
 
 export const Icons = {
@@ -23,4 +24,5 @@ export const Icons = {
   Add: CirclePlus,
   Logout: LogOut,
   Calendar: CalendarIcon,
+  MoreHorizontal,
 };

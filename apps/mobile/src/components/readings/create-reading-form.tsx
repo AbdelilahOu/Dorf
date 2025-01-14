@@ -49,6 +49,7 @@ export const CreateReadingForm: React.FC = () => {
       const response = await fetch(`${SERVER_URL}/readings`, {
         method: "POST",
         body: JSON.stringify({ waterMeterId, amount }),
+        headers: new Headers({ "Content-Type": "application/json" }),
       });
       if (!response.ok) {
         const message = await response.text();

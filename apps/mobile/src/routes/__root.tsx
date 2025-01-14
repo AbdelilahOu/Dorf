@@ -24,7 +24,10 @@ export const rootRoute = createRootRouteWithContext<RouteContext>()({
         },
       });
     }
-    if (!PUBLIC_PAGES.includes(pathname)) {
+
+    const IsPublicPage = PUBLIC_PAGES.some((page) => pathname.startsWith(page));
+
+    if (!IsPublicPage) {
       const [token, user] = await Promise.allSettled([
         context.store.get<string>("token"),
         context.store.get<SelectUser>("user"),

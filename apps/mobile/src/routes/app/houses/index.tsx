@@ -15,6 +15,10 @@ import { SERVER_URL } from "../../../../env";
 import { CreateHouseForm } from "../../../components/houses/create-house-form";
 import { HousesTable } from "../../../components/houses/houses-table";
 import { appLayoutRoute } from "../app-layout";
+import { UpdateHouseForm } from "../../../components/houses/update-house-form";
+import { useState } from "react";
+import { DeleteHouseForm } from "../../../components/houses/delete-house-form";
+import { SelectHouse } from "@dorf/api/src/db/schema";
 
 export const housesRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
@@ -24,6 +28,17 @@ export const housesRoute = createRoute({
 
 function HousesComponent() {
   const { toast } = useToast();
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [whichDrawer, setWichDrawer] = useState<
+    "UPDATE_HOUSE" | "DELETE_HOUSE" | "CREATE_HOUSE" | undefined
+  >(undefined);
+  const [drawerProps, setDrawerProps] = useState<any>({});
+
+  const DRAWERS = {
+    CREATE_HOUSE: CreateHouseForm,
+    UPDATE_HOUSE: UpdateHouseForm,
+    DELETE_HOUSE: DeleteHouseForm,
+  };
 
   const { data, error } = useQuery({
     queryKey: ["houses"],
@@ -32,14 +47,13 @@ function HousesComponent() {
         const response = await fetch(`${SERVER_URL}/houses/`, {
           method: "GET",
         });
-        if (response.status === 200 || response.statusText === "OK") {
-          return await response.json();
+        if (!response.ok) {
+          const message = await response.text();
+          throw new Error(message);
         }
         const data = await response.json();
-        toast({ title: data.message, variant: "destructive" });
-        return [];
+        return data;
       } catch (error) {
-        console.log(error);
         toast({ title: `Error: ${error}`, variant: "destructive" });
         return [];
       }
@@ -47,25 +61,38 @@ function HousesComponent() {
     retry: false,
   });
 
+  function handleOpenDrawer(drawer: string, house?: any) {
+    setWichDrawer(drawer as "UPDATE_HOUSE" | "DELETE_HOUSE" | "CREATE_HOUSE");
+    setDrawerProps(house);
+    setOpenDrawer(true);
+  }
+
   return (
     <div className="h-full w-full">
       <div className="flex justify-end py-2">
-        <Drawer fixed={true}>
-          <DrawerTrigger>
-            <Button>Add house</Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-              <DrawerDescription>
-                This action cannot be undone.
-              </DrawerDescription>
-            </DrawerHeader>
-            <CreateHouseForm />
-          </DrawerContent>
-        </Drawer>
+        <Button onClick={() => handleOpenDrawer("CREATE_HOUSE")}>
+          Add house
+        </Button>
       </div>
-      <HousesTable data={data || []} />
+      <HousesTable
+        data={data || []}
+        onDelete={(id) => handleOpenDrawer("DELETE_HOUSE", { id })}
+        onUpdate={(house: SelectHouse) =>
+          handleOpenDrawer("UPDATE_HOUSE", house)
+        }
+      />
+      <Drawer
+        open={openDrawer}
+        defaultOpen={openDrawer}
+        onOpenChange={(open) => setOpenDrawer(open)}
+      >
+        {whichDrawer &&
+          (() => {
+            const DrawerComponent = DRAWERS[whichDrawer];
+
+            return <DrawerComponent {...drawerProps} />;
+          })()}
+      </Drawer>
     </div>
   );
 }

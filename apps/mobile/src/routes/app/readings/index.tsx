@@ -35,14 +35,13 @@ function ReadingsComponent() {
         const response = await fetch(`${SERVER_URL}/readings/`, {
           method: "GET",
         });
-        if (response.status === 200 || response.statusText === "OK") {
-          return await response.json();
+        if (!response.ok) {
+          const message = await response.text();
+          throw new Error(message);
         }
         const data = await response.json();
-        toast({ title: data.message, variant: "destructive" });
-        return [];
+        return data;
       } catch (error) {
-        console.log(error);
         toast({ title: `Error: ${error}`, variant: "destructive" });
         return [];
       }
@@ -53,7 +52,7 @@ function ReadingsComponent() {
   return (
     <div className="h-full w-full">
       <div className="flex justify-end py-2">
-        <Drawer fixed={true}>
+        <Drawer>
           <DrawerTrigger>
             <Button>Add reading</Button>
           </DrawerTrigger>

@@ -40,6 +40,7 @@ export const UpdateReadingForm: React.FC<{ id: string }> = ({ id }) => {
       const response = await fetch(`${SERVER_URL}/readings/${id}`, {
         method: "PUT",
         body: JSON.stringify({ amount }),
+        headers: new Headers({ "Content-Type": "application/json" }),
       });
       if (!response.ok) {
         const message = await response.text();
