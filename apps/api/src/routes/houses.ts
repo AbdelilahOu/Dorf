@@ -1,5 +1,5 @@
 import { createDatabaseConnection } from "@/db";
-import { houses, users } from "@/db/schema";
+import { houses } from "@/db/schema";
 import { createRouter } from "@/lib/create-app";
 import { createRoute } from "@hono/zod-openapi";
 import { and, eq, not, sql } from "drizzle-orm";

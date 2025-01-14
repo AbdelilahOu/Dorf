@@ -85,9 +85,7 @@ export const waterMeterReadings = sqliteTable("water_meter_readings", {
     .notNull()
     .references(() => houses.waterMeterId, { onDelete: "restrict" }),
   amount: real("amount").notNull(),
-  readingDate: text("reading_date")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  readingDate: text("reading_date").notNull().default(sql`CURRENT_TIMESTAMP`),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),

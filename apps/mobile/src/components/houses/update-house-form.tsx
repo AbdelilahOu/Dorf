@@ -18,12 +18,12 @@ import {
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
-import { SelectHouse } from "@dorf/api/src/db/schema";
+import type { SelectHouse } from "@dorf/api/src/db/schema";
 
 const updateHouseSchema = z.object({
   waterMeterId: z.string().min(1, { message: "Water meter ID is required" }),

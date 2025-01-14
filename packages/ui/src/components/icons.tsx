@@ -8,8 +8,8 @@ import {
   LayoutGrid,
   List,
   LogOut,
-  UserCog,
   MoreHorizontal,
+  UserCog,
 } from "lucide-react";
 
 export const Icons = {

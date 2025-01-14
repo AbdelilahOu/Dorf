@@ -1,24 +1,17 @@
+import type { SelectHouse } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@dorf/ui/drawer";
+import { Drawer } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { createRoute } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
+import { useState } from "react";
 import { SERVER_URL } from "../../../../env";
 import { CreateHouseForm } from "../../../components/houses/create-house-form";
-import { HousesTable } from "../../../components/houses/houses-table";
-import { appLayoutRoute } from "../app-layout";
-import { UpdateHouseForm } from "../../../components/houses/update-house-form";
-import { useState } from "react";
 import { DeleteHouseForm } from "../../../components/houses/delete-house-form";
-import { SelectHouse } from "@dorf/api/src/db/schema";
+import { HousesTable } from "../../../components/houses/houses-table";
+import { UpdateHouseForm } from "../../../components/houses/update-house-form";
+import { appLayoutRoute } from "../app-layout";
 
 export const housesRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
