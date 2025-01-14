@@ -42,7 +42,7 @@ const housesRoute = createRouter()
                   name: z.string().nullable(),
                   district: z.string(),
                   headOfHousehold: z.string().nullable(),
-                  createdAt: z.date(),
+                  createdAt: z.string(),
                 }),
               ),
             },
@@ -61,21 +61,14 @@ const housesRoute = createRouter()
           c.env.TURSO_AUTH_TOKEN,
         );
         const data = await db
-          .select({
-            waterMeterId: houses.waterMeterId,
-            name: houses.name,
-            district: houses.district,
-            headOfHousehold: users.name,
-            createdAt: houses.createdAt,
-          })
+          .select()
           .from(houses)
-          .leftJoin(users, eq(users.id, houses.headOfHousehold))
           .where(not(eq(houses.deleted, true)))
           .orderBy(sql`${houses.updatedAt} desc`)
           .all();
         return c.json(data, 200);
       } catch (error) {
-        c.env.LOGGER.error("Error fetching houses:", error);
+        c.var.logger.error("Error fetching houses:", error);
         return c.text("Internal server error", 500);
       }
     },
@@ -128,7 +121,7 @@ const housesRoute = createRouter()
 
         return c.json(house, 200);
       } catch (error) {
-        c.env.LOGGER.error("Error fetching house by ID:", error);
+        c.var.logger.error("Error fetching house by ID:", error);
         return c.text("Internal server error", 500);
       }
     },
@@ -170,15 +163,19 @@ const housesRoute = createRouter()
         c.env.TURSO_AUTH_TOKEN,
       );
       const newHouse = c.req.valid("json");
+      c.var.logger.info(newHouse);
       try {
         const insertedHouse = await db
           .insert(houses)
-          .values({ ...newHouse, deleted: false })
+          .values({
+            ...newHouse,
+            deleted: false,
+          })
           .returning()
           .get();
         return c.json(insertedHouse, 201);
       } catch (error) {
-        c.env.LOGGER.error("Error creating house:", error);
+        c.var.logger.error("Error creating house:", error);
         return c.text("Error creating house", 400);
       }
     },
@@ -237,7 +234,7 @@ const housesRoute = createRouter()
         }
         return c.json(house);
       } catch (error) {
-        c.env.LOGGER.error("Error updating house:", error);
+        c.var.logger.error("Error updating house:", error);
         return c.text("Error updating house", 400);
       }
     },
@@ -286,7 +283,7 @@ const housesRoute = createRouter()
           .run();
         return c.text("delete successfully", 204);
       } catch (error) {
-        c.env.LOGGER.error("Error soft deleting house:", error);
+        c.var.logger.error("Error soft deleting house:", error);
         return c.text("Error soft deleting house", 500);
       }
     },

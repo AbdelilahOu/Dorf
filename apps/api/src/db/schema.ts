@@ -70,8 +70,8 @@ export const houses = sqliteTable("houses", {
   headOfHousehold: text("head-of-household").references(() => users.id),
   deleted: integer({ mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" })
-    .default(sql`(CURRENT_TIMESTAMP)`)
-    .notNull(),
+    .notNull()
+    .$defaultFn(() => new Date()),
   updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(
     () => new Date(),
   ),
@@ -85,8 +85,12 @@ export const waterMeterReadings = sqliteTable("water_meter_readings", {
     .notNull()
     .references(() => houses.waterMeterId, { onDelete: "restrict" }),
   amount: real("amount").notNull(),
-  readingDate: text("reading_date").notNull().default(sql`CURRENT_TIMESTAMP`),
-  createdAt: text("created_at").default(sql`(CURRENT_TIMESTAMP)`).notNull(),
+  readingDate: text("reading_date")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
 });
 
 export type InsertUser = typeof users.$inferInsert;

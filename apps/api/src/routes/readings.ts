@@ -79,7 +79,7 @@ const readings = createRouter()
           .all();
         return c.json(readings, 200);
       } catch (error) {
-        c.env.LOGGER.error("Error fetching all readings:", error);
+        c.var.logger.error("Error fetching all readings:", error);
         return c.text("Internal server error", 500);
       }
     },
@@ -126,7 +126,7 @@ const readings = createRouter()
         }
         return c.json(reading, 200);
       } catch (error) {
-        c.env.LOGGER.error("Error fetching reading by ID:", error);
+        c.var.logger.error("Error fetching reading by ID:", error);
         return c.text("Internal server error", 500);
       }
     },
@@ -176,7 +176,7 @@ const readings = createRouter()
           .get();
         return c.json(insertedReading, 201);
       } catch (error) {
-        c.env.LOGGER.error("Error creating reading:", error);
+        c.var.logger.error("Error creating reading:", error);
         return c.text("Error creating reading", 400);
       }
     },
@@ -235,7 +235,7 @@ const readings = createRouter()
         }
         return c.json(reading, 200);
       } catch (error) {
-        c.env.LOGGER.error("Error updating reading:", error);
+        c.var.logger.error("Error updating reading:", error);
         return c.text("Error updating reading", 400);
       }
     },
@@ -281,7 +281,7 @@ const readings = createRouter()
           .run();
         return c.text("deleted successfully", 204);
       } catch (error) {
-        c.env.LOGGER.error("Error deleting reading:", error);
+        c.var.logger.error("Error deleting reading:", error);
         return c.text("Error deleting reading", 500);
       }
     },

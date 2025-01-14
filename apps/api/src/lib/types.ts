@@ -5,12 +5,12 @@ import type { PinoLogger } from "hono-pino";
 export type Variables = {
   user: SelectUser | null;
   session: SelectSession | null;
+  logger: PinoLogger;
 };
 
 export type Bindings = {
   TURSO_CONNECTION_URL: string;
   TURSO_AUTH_TOKEN: string;
-  LOGGER: PinoLogger;
 };
 
 export interface AppBindings {
