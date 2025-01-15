@@ -141,15 +141,22 @@ function ProfileComponent() {
                 )}
               />
 
-              <CardFooter className="flex justify-end p-0">
+              <CardFooter className="flex gap-2 p-0">
                 {!isEditing ? (
-                  <Button onClick={handleEditClick}>Edit Profile</Button>
+                  <Button type="button" onClick={handleEditClick}>
+                    Edit Profile
+                  </Button>
                 ) : (
                   <>
-                    <Button variant="outline" onClick={handleCancelClick}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleCancelClick}
+                    >
                       Cancel
                     </Button>
                     <Button
+                      className=""
                       type="submit"
                       disabled={form.formState.isSubmitting}
                     >

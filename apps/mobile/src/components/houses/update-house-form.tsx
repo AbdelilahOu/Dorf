@@ -18,7 +18,7 @@ import {
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -35,6 +35,7 @@ type UpdateHouseSchema = z.infer<typeof updateHouseSchema>;
 
 export const UpdateHouseForm: React.FC<SelectHouse> = (props) => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const form = useForm<UpdateHouseSchema>({
     resolver: zodResolver(updateHouseSchema),
@@ -62,6 +63,7 @@ export const UpdateHouseForm: React.FC<SelectHouse> = (props) => {
     },
     onSuccess: () => {
       toast({ title: "House Updated" });
+      queryClient.invalidateQueries({ queryKey: ["houses"] });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });

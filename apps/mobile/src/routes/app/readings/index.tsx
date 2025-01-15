@@ -1,21 +1,17 @@
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@dorf/ui/drawer";
+import type { SelectReading } from "@dorf/api/src/db/schema";
+import { Button } from "@dorf/ui/button";
+import { Drawer } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { createRoute, useNavigate } from "@tanstack/react-router";
+import { createRoute } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
+import { useState } from "react";
 import { SERVER_URL } from "../../../../env";
 import { CreateReadingForm } from "../../../components/readings/create-reading-form";
+import { DeleteReadingForm } from "../../../components/readings/delete-reading-form";
 import { ReadingsTable } from "../../../components/readings/readings-table";
-import { useTauriApis } from "../../../context";
+import { UpdateReadingForm } from "../../../components/readings/update-reading-form";
 import { appLayoutRoute } from "../app-layout";
-import { Button } from "@dorf/ui/button";
 
 export const readingsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
@@ -25,8 +21,17 @@ export const readingsRoute = createRoute({
 
 function ReadingsComponent() {
   const { toast } = useToast();
-  const navigate = useNavigate();
-  const { store } = useTauriApis();
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [whichDrawer, setWichDrawer] = useState<
+    "UPDATE_READING" | "DELETE_READING" | "CREATE_READING" | undefined
+  >(undefined);
+  const [drawerProps, setDrawerProps] = useState<any>({});
+
+  const DRAWERS = {
+    CREATE_READING: CreateReadingForm,
+    UPDATE_READING: UpdateReadingForm,
+    DELETE_READING: DeleteReadingForm,
+  };
 
   const { data, error } = useQuery({
     queryKey: ["readings"],
@@ -49,25 +54,41 @@ function ReadingsComponent() {
     retry: false,
   });
 
+  function handleOpenDrawer(drawer: string, reading?: any) {
+    setWichDrawer(
+      drawer as "UPDATE_READING" | "DELETE_READING" | "CREATE_READING",
+    );
+    setDrawerProps(reading);
+    setOpenDrawer(true);
+  }
+
   return (
     <div className="h-full w-full">
       <div className="flex justify-end py-2">
-        <Drawer>
-          <DrawerTrigger>
-            <Button>Add reading</Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-              <DrawerDescription>
-                This action cannot be undone.
-              </DrawerDescription>
-            </DrawerHeader>
-            <CreateReadingForm />
-          </DrawerContent>
-        </Drawer>
+        <Button onClick={() => handleOpenDrawer("CREATE_READING")}>
+          Add reading
+        </Button>
       </div>
-      <ReadingsTable data={data || []} />
+      <ReadingsTable
+        data={data || []}
+        onDelete={(id) => handleOpenDrawer("DELETE_READING", { id })}
+        onUpdate={(reading: SelectReading) =>
+          handleOpenDrawer("UPDATE_READING", reading)
+        }
+      />
+      <Drawer
+        fixed={true}
+        open={openDrawer}
+        defaultOpen={openDrawer}
+        onOpenChange={(open) => setOpenDrawer(open)}
+      >
+        {whichDrawer &&
+          (() => {
+            const DrawerComponent = DRAWERS[whichDrawer];
+
+            return <DrawerComponent {...drawerProps} />;
+          })()}
+      </Drawer>
     </div>
   );
 }

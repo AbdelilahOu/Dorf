@@ -14,12 +14,28 @@ import {
   TableRow,
 } from "@dorf/ui/table";
 import type { SelectReading } from "@dorf/api/src/db/schema";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@dorf/ui/dropdown-menu";
+import { Button } from "@dorf/ui/button";
+import { Icons } from "@dorf/ui/icons";
 
 interface ReadingsTableProps<TData> {
   data: TData[];
+  onUpdate: (reading: SelectReading) => void;
+  onDelete: (id: string) => void;
 }
 
-export function ReadingsTable<TData>({ data }: ReadingsTableProps<TData>) {
+export function ReadingsTable<TData>({
+  data,
+  onDelete,
+  onUpdate,
+}: ReadingsTableProps<TData>) {
   const columns: ColumnDef<SelectReading>[] = [
     {
       accessorKey: "waterMeterId",
@@ -30,20 +46,49 @@ export function ReadingsTable<TData>({ data }: ReadingsTableProps<TData>) {
       header: "Amount",
     },
     {
-      accessorKey: "readingDate",
-      header: "Month",
-    },
-    {
       accessorKey: "createdAt",
-      header: "Created At",
+      header: "Date",
+      cell: ({ row }) => {
+        const value = row.getValue<string>("createdAt");
+        return (
+          <time dateTime={value}>
+            {value
+              ? new Date(value).toLocaleDateString("fr-fr", {
+                  month: "long",
+                  year: "numeric",
+                })
+              : ""}
+          </time>
+        );
+      },
     },
     {
-      accessorKey: "houseName",
-      header: "House name",
-    },
-    {
-      accessorKey: "headOfHousehold",
-      header: "House owner",
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const reading = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <Icons.MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onUpdate(reading)}>
+                update
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onDelete(reading.waterMeterId)}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
   ];
   const table = useReactTable({

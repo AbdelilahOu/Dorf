@@ -1,5 +1,12 @@
 import { Button } from "@dorf/ui/button";
-import { DrawerClose, DrawerFooter } from "@dorf/ui/drawer";
+import {
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@dorf/ui/drawer";
 import {
   Form,
   FormControl,
@@ -13,7 +20,7 @@ import { Calendar } from "@dorf/ui/calendar";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -22,9 +29,7 @@ import { Icons } from "@dorf/ui/icons";
 import { cn } from "@dorf/ui/utils";
 
 const createReadingSchema = z.object({
-  waterMeterId: z.coerce
-    .number()
-    .positive({ message: "House ID must be a positive number" }),
+  waterMeterId: z.coerce.string(),
   amount: z.coerce
     .number()
     .positive({ message: "Amount must be a positive number" }),
@@ -35,6 +40,7 @@ type CreateReadingSchema = z.infer<typeof createReadingSchema>;
 
 export const CreateReadingForm: React.FC = () => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const form = useForm<CreateReadingSchema>({
     resolver: zodResolver(createReadingSchema),
@@ -45,10 +51,14 @@ export const CreateReadingForm: React.FC = () => {
   });
 
   const createReadingMutation = useMutation({
-    mutationFn: async ({ waterMeterId, amount }: CreateReadingSchema) => {
+    mutationFn: async (reading: CreateReadingSchema) => {
       const response = await fetch(`${SERVER_URL}/readings`, {
         method: "POST",
-        body: JSON.stringify({ waterMeterId, amount }),
+        body: JSON.stringify({
+          waterMeterId: reading.waterMeterId.toString(),
+          amount: reading.amount,
+          readingDate: reading.readingDate,
+        }),
         headers: new Headers({ "Content-Type": "application/json" }),
       });
       if (!response.ok) {
@@ -58,6 +68,7 @@ export const CreateReadingForm: React.FC = () => {
     },
     onSuccess: () => {
       toast({ title: "Reading Created" });
+      queryClient.invalidateQueries({ queryKey: ["readings"] });
       form.reset();
     },
     onError: (error: any) => {
@@ -71,88 +82,97 @@ export const CreateReadingForm: React.FC = () => {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
-        <FormField
-          control={form.control}
-          name="waterMeterId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>House</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Enter waterMeterId"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Amount (m³)</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="Enter amount" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="readingDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Reading Date</FormLabel>
-              <FormControl>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] justify-start text-left font-normal",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      <Icons.Calendar />
-                      {field.value ? (
-                        new Date(field.value).toLocaleString()
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      // @ts-ignore
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <DrawerFooter className="p-0">
-          <DrawerClose asChild>
-            <Button type="button" variant="outline">
-              close
+    <DrawerContent>
+      <DrawerHeader>
+        <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+        <DrawerDescription>This action cannot be undone.</DrawerDescription>
+      </DrawerHeader>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
+          <FormField
+            control={form.control}
+            name="waterMeterId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>House</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Enter waterMeterId"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="amount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Amount (m³)</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="Enter amount" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="readingDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col gap-1">
+                <FormLabel>Reading Date</FormLabel>
+                <FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        type="button"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        <Icons.Calendar />
+                        {field.value ? (
+                          new Date(field.value).toLocaleString()
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        // @ts-ignore
+                        selected={field.value}
+                        onSelect={(v) => field.onChange(v?.toDateString())}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <DrawerFooter className="p-0">
+            <DrawerClose asChild>
+              <Button type="button" variant="outline">
+                close
+              </Button>
+            </DrawerClose>
+            <Button type="submit" disabled={createReadingMutation.isPending}>
+              {createReadingMutation.isPending
+                ? "Creating..."
+                : "Create Reading"}
             </Button>
-          </DrawerClose>
-          <Button type="submit" disabled={createReadingMutation.isPending}>
-            {createReadingMutation.isPending ? "Creating..." : "Create Reading"}
-          </Button>
-        </DrawerFooter>
-      </form>
-    </Form>
+          </DrawerFooter>
+        </form>
+      </Form>
+    </DrawerContent>
   );
 };

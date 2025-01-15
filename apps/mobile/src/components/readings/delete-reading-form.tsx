@@ -7,48 +7,62 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@dorf/ui/drawer";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@dorf/ui/form";
+import { Form } from "@dorf/ui/form";
 import { useToast } from "@dorf/ui/hooks/use-toast";
-import { Input } from "@dorf/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
-import type { SelectReading } from "@dorf/api/src/db/schema";
 
 const updateReadingSchema = z.object({
-  amount: z.coerce
-    .number()
-    .positive({ message: "Amount must be a positive number" }),
+  id: z.string().min(1, { message: "Reading id is required" }),
 });
 
-type UpdateReadingSchema = z.infer<typeof updateReadingSchema>;
+type DeleteReadingSchema = z.infer<typeof updateReadingSchema>;
 
-export const UpdateReadingForm: React.FC<SelectReading> = (props) => {
+export const DeleteReadingForm: React.FC<{ id: string }> = ({ id }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const form = useForm<UpdateReadingSchema>({
+  const form = useForm<DeleteReadingSchema>({
     resolver: zodResolver(updateReadingSchema),
     defaultValues: {
-      amount: props.amount,
+      id,
     },
   });
 
+  const {
+    data: house,
+    isPending: houseLoading,
+    error: houseError,
+  } = useQuery({
+    queryKey: ["house", id],
+    queryFn: async () => {
+      try {
+        const response = await fetch(`${SERVER_URL}/readings/${id}`, {
+          method: "GET",
+        });
+        if (!response.ok) {
+          const message = await response.text();
+          throw new Error(message);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast({ title: `Error: ${error}`, variant: "destructive" });
+        return {};
+      }
+    },
+    enabled: !!id,
+  });
+
   const updateReadingMutation = useMutation({
-    mutationFn: async ({ amount }: UpdateReadingSchema) => {
-      const response = await fetch(`${SERVER_URL}/readings/${props.id}`, {
+    mutationFn: async (updateReading: DeleteReadingSchema) => {
+      const response = await fetch(`${SERVER_URL}/readings/${id}`, {
         method: "PUT",
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify(updateReading),
         headers: new Headers({ "Content-Type": "application/json" }),
       });
       if (!response.ok) {
@@ -57,7 +71,7 @@ export const UpdateReadingForm: React.FC<SelectReading> = (props) => {
       }
     },
     onSuccess: () => {
-      toast({ title: "Reading Updated" });
+      toast({ title: "Reading Deleted" });
       queryClient.invalidateQueries({ queryKey: ["readings"] });
     },
     onError: (error: any) => {
@@ -65,7 +79,7 @@ export const UpdateReadingForm: React.FC<SelectReading> = (props) => {
     },
   });
 
-  const onSubmit = (data: UpdateReadingSchema) => {
+  const onSubmit = (data: DeleteReadingSchema) => {
     updateReadingMutation.mutate(data);
   };
 
@@ -77,30 +91,20 @@ export const UpdateReadingForm: React.FC<SelectReading> = (props) => {
       </DrawerHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
-          <FormField
-            control={form.control}
-            name="amount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Amount (m³)</FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="Enter amount" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <DrawerFooter className="p-0">
             <DrawerClose asChild>
               <Button type="button" variant="outline">
                 close
               </Button>
             </DrawerClose>
-            <Button type="submit" disabled={updateReadingMutation.isPending}>
+            <Button
+              type="submit"
+              variant="destructive"
+              disabled={updateReadingMutation.isPending}
+            >
               {updateReadingMutation.isPending
-                ? "Updating..."
-                : "Update Reading"}
+                ? "Deleting..."
+                : "Delete Reading"}
             </Button>
           </DrawerFooter>
         </form>

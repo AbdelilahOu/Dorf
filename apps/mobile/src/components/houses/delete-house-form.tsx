@@ -7,12 +7,10 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@dorf/ui/drawer";
-import {
-  Form,
-} from "@dorf/ui/form";
+import { Form } from "@dorf/ui/form";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -26,6 +24,7 @@ type DeleteHouseSchema = z.infer<typeof updateHouseSchema>;
 
 export const DeleteHouseForm: React.FC<{ id: string }> = ({ id }) => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const form = useForm<DeleteHouseSchema>({
     resolver: zodResolver(updateHouseSchema),
@@ -73,6 +72,7 @@ export const DeleteHouseForm: React.FC<{ id: string }> = ({ id }) => {
     },
     onSuccess: () => {
       toast({ title: "House Deleted" });
+      queryClient.invalidateQueries({ queryKey: ["houses"] });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });

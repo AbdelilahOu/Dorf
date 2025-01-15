@@ -75,6 +75,7 @@ function HousesComponent() {
         }
       />
       <Drawer
+        fixed={true}
         open={openDrawer}
         defaultOpen={openDrawer}
         onOpenChange={(open) => setOpenDrawer(open)}
