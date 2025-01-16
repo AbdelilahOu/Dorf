@@ -1,6 +1,6 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 
-import type { AppBindings } from "./types";
+import type { AppBindings } from "../bindings";
 
 export function createRouter() {
   return new OpenAPIHono<AppBindings>({

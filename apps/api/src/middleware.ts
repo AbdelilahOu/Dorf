@@ -12,9 +12,11 @@ export const authMiddleware = createMiddleware(
     const session = await auth.api.getSession({ headers });
 
     if (!session) {
-      c.set("user", null);
-      c.set("session", null);
-      return await next();
+      return c.json({ message: "UNAUTHORIZED" }, 401);
+    }
+
+    if (!session.user.emailVerified) {
+      return c.json({ message: "EMAIL IS NOT VERIFIED" }, 403);
     }
 
     c.set("user", session.user);
