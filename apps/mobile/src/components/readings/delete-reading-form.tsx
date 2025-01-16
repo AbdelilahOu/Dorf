@@ -22,7 +22,12 @@ const updateReadingSchema = z.object({
 
 type DeleteReadingSchema = z.infer<typeof updateReadingSchema>;
 
-export const DeleteReadingForm: React.FC<{ id: string }> = ({ id }) => {
+type Props = {
+  token: string;
+  id: string;
+};
+
+export const DeleteReadingForm = ({ id, token }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -33,37 +38,15 @@ export const DeleteReadingForm: React.FC<{ id: string }> = ({ id }) => {
     },
   });
 
-  const {
-    data: house,
-    isPending: houseLoading,
-    error: houseError,
-  } = useQuery({
-    queryKey: ["house", id],
-    queryFn: async () => {
-      try {
-        const response = await fetch(`${SERVER_URL}/readings/${id}`, {
-          method: "GET",
-        });
-        if (!response.ok) {
-          const message = await response.text();
-          throw new Error(message);
-        }
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        toast({ title: `Error: ${error}`, variant: "destructive" });
-        return {};
-      }
-    },
-    enabled: !!id,
-  });
-
   const updateReadingMutation = useMutation({
     mutationFn: async (updateReading: DeleteReadingSchema) => {
       const response = await fetch(`${SERVER_URL}/readings/${id}`, {
         method: "PUT",
         body: JSON.stringify(updateReading),
-        headers: new Headers({ "Content-Type": "application/json" }),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }),
       });
       if (!response.ok) {
         const message = await response.text();

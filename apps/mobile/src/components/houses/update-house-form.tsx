@@ -33,27 +33,35 @@ const updateHouseSchema = z.object({
 
 type UpdateHouseSchema = z.infer<typeof updateHouseSchema>;
 
-export const UpdateHouseForm: React.FC<SelectHouse> = (props) => {
+type Props = {
+  house: SelectHouse;
+  token: string;
+};
+
+export const UpdateHouseForm = ({ house, token }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const form = useForm<UpdateHouseSchema>({
     resolver: zodResolver(updateHouseSchema),
     defaultValues: {
-      waterMeterId: props.waterMeterId,
-      district: props.district,
-      name: props.name || undefined,
+      waterMeterId: house.waterMeterId,
+      district: house.district,
+      name: house.name || undefined,
     },
   });
 
   const updateHouseMutation = useMutation({
     mutationFn: async (updateHouse: UpdateHouseSchema) => {
       const response = await fetch(
-        `${SERVER_URL}/houses/${props.waterMeterId}`,
+        `${SERVER_URL}/houses/${house.waterMeterId}`,
         {
           method: "PUT",
           body: JSON.stringify(updateHouse),
-          headers: new Headers({ "Content-Type": "application/json" }),
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }),
         },
       );
       if (!response.ok) {

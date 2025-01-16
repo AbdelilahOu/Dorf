@@ -17,53 +17,36 @@ import * as z from "zod";
 import { SERVER_URL } from "../../../env";
 
 const updateHouseSchema = z.object({
-  id: z.string().min(1, { message: "House id is required" }),
+  waterMeterId: z.string().min(1, { message: "House id is required" }),
 });
 
 type DeleteHouseSchema = z.infer<typeof updateHouseSchema>;
 
-export const DeleteHouseForm: React.FC<{ id: string }> = ({ id }) => {
+type Props = {
+  token: string;
+  waterMeterId: string;
+};
+
+export const DeleteHouseForm = ({ waterMeterId, token }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const form = useForm<DeleteHouseSchema>({
     resolver: zodResolver(updateHouseSchema),
     defaultValues: {
-      id,
+      waterMeterId,
     },
-  });
-
-  const {
-    data: house,
-    isPending: houseLoading,
-    error: houseError,
-  } = useQuery({
-    queryKey: ["house", id],
-    queryFn: async () => {
-      try {
-        const response = await fetch(`${SERVER_URL}/houses/${id}`, {
-          method: "GET",
-        });
-        if (!response.ok) {
-          const message = await response.text();
-          throw new Error(message);
-        }
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        toast({ title: `Error: ${error}`, variant: "destructive" });
-        return {};
-      }
-    },
-    enabled: !!id,
   });
 
   const updateHouseMutation = useMutation({
     mutationFn: async (updateHouse: DeleteHouseSchema) => {
-      const response = await fetch(`${SERVER_URL}/houses/${id}`, {
+      const response = await fetch(`${SERVER_URL}/houses/${waterMeterId}`, {
         method: "PUT",
         body: JSON.stringify(updateHouse),
-        headers: new Headers({ "Content-Type": "application/json" }),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }),
       });
       if (!response.ok) {
         const message = await response.text();

@@ -33,23 +33,31 @@ const updateReadingSchema = z.object({
 
 type UpdateReadingSchema = z.infer<typeof updateReadingSchema>;
 
-export const UpdateReadingForm: React.FC<SelectReading> = (props) => {
+type Props = {
+  reading: SelectReading;
+  token: string;
+};
+
+export const UpdateReadingForm = ({ reading, token }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const form = useForm<UpdateReadingSchema>({
     resolver: zodResolver(updateReadingSchema),
     defaultValues: {
-      amount: props.amount,
+      amount: reading.amount,
     },
   });
 
   const updateReadingMutation = useMutation({
     mutationFn: async ({ amount }: UpdateReadingSchema) => {
-      const response = await fetch(`${SERVER_URL}/readings/${props.id}`, {
+      const response = await fetch(`${SERVER_URL}/readings/${reading.id}`, {
         method: "PUT",
         body: JSON.stringify({ amount }),
-        headers: new Headers({ "Content-Type": "application/json" }),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }),
       });
       if (!response.ok) {
         const message = await response.text();

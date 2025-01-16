@@ -32,7 +32,11 @@ const createHouseSchema = z.object({
 
 type CreateHouseSchema = z.infer<typeof createHouseSchema>;
 
-export const CreateHouseForm: React.FC = () => {
+type Props = {
+  token: string;
+};
+
+export const CreateHouseForm = ({ token }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -50,7 +54,10 @@ export const CreateHouseForm: React.FC = () => {
       const response = await fetch(`${SERVER_URL}/houses`, {
         method: "POST",
         body: JSON.stringify(NewHouse),
-        headers: new Headers({ "Content-Type": "application/json" }),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }),
       });
       if (!response.ok) {
         const message = await response.text();

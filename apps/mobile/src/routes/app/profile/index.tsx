@@ -96,7 +96,7 @@ function ProfileComponent() {
   };
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <Card className="w-[400px]">
+      <Card className="w-[400px] shadow-none">
         <CardHeader>
           <CardTitle>Profile Information</CardTitle>
           <CardDescription>View and edit your profile details.</CardDescription>

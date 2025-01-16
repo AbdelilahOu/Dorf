@@ -1,4 +1,4 @@
-import type { SelectHouse } from "@dorf/api/src/db/schema";
+import type { SelectHouse, SelectUser } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
 import { Drawer } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
@@ -17,10 +17,21 @@ export const housesRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: "houses",
   component: HousesComponent,
+  loader: async ({ context }) => {
+    const token = await context.store.get<string>("token");
+    return {
+      token,
+    };
+  },
 });
 
 function HousesComponent() {
   const { toast } = useToast();
+  const { user, token } = housesRoute.useLoaderData() as {
+    user: SelectUser;
+    token: string;
+  };
+
   const [openDrawer, setOpenDrawer] = useState(false);
   const [whichDrawer, setWichDrawer] = useState<
     "UPDATE_HOUSE" | "DELETE_HOUSE" | "CREATE_HOUSE" | undefined
@@ -39,6 +50,7 @@ function HousesComponent() {
       try {
         const response = await fetch(`${SERVER_URL}/houses/`, {
           method: "GET",
+          headers: new Headers({ Authorization: `Bearer ${token}` }),
         });
         if (!response.ok) {
           const message = await response.text();
@@ -54,9 +66,9 @@ function HousesComponent() {
     retry: false,
   });
 
-  function handleOpenDrawer(drawer: string, house?: any) {
+  function handleOpenDrawer(drawer: string, house?: Partial<SelectHouse>) {
     setWichDrawer(drawer as "UPDATE_HOUSE" | "DELETE_HOUSE" | "CREATE_HOUSE");
-    setDrawerProps(house);
+    setDrawerProps({ house, token });
     setOpenDrawer(true);
   }
 
@@ -69,7 +81,9 @@ function HousesComponent() {
       </div>
       <HousesTable
         data={data || []}
-        onDelete={(id) => handleOpenDrawer("DELETE_HOUSE", { id })}
+        onDelete={(id) =>
+          handleOpenDrawer("DELETE_HOUSE", { waterMeterId: id })
+        }
         onUpdate={(house: SelectHouse) =>
           handleOpenDrawer("UPDATE_HOUSE", house)
         }

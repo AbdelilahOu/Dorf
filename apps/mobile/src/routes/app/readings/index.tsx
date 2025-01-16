@@ -1,4 +1,4 @@
-import type { SelectReading } from "@dorf/api/src/db/schema";
+import type { SelectReading, SelectUser } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
 import { Drawer } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
@@ -17,10 +17,21 @@ export const readingsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: "readings",
   component: ReadingsComponent,
+  loader: async ({ context }) => {
+    const token = await context.store.get<string>("token");
+    return {
+      token,
+    };
+  },
 });
 
 function ReadingsComponent() {
   const { toast } = useToast();
+  const { user, token } = readingsRoute.useLoaderData() as {
+    user: SelectUser;
+    token: string;
+  };
+
   const [openDrawer, setOpenDrawer] = useState(false);
   const [whichDrawer, setWichDrawer] = useState<
     "UPDATE_READING" | "DELETE_READING" | "CREATE_READING" | undefined
@@ -39,6 +50,7 @@ function ReadingsComponent() {
       try {
         const response = await fetch(`${SERVER_URL}/readings/`, {
           method: "GET",
+          headers: new Headers({ Authorization: `Bearer ${token}` }),
         });
         if (!response.ok) {
           const message = await response.text();
@@ -54,11 +66,11 @@ function ReadingsComponent() {
     retry: false,
   });
 
-  function handleOpenDrawer(drawer: string, reading?: any) {
+  function handleOpenDrawer(drawer: string, reading?: Partial<SelectReading>) {
     setWichDrawer(
       drawer as "UPDATE_READING" | "DELETE_READING" | "CREATE_READING",
     );
-    setDrawerProps(reading);
+    setDrawerProps({ reading, token });
     setOpenDrawer(true);
   }
 

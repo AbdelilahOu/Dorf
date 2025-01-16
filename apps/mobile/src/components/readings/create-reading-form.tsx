@@ -38,7 +38,11 @@ const createReadingSchema = z.object({
 
 type CreateReadingSchema = z.infer<typeof createReadingSchema>;
 
-export const CreateReadingForm: React.FC = () => {
+type Props = {
+  token: string;
+};
+
+export const CreateReadingForm = ({ token }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -59,7 +63,10 @@ export const CreateReadingForm: React.FC = () => {
           amount: reading.amount,
           readingDate: reading.readingDate,
         }),
-        headers: new Headers({ "Content-Type": "application/json" }),
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }),
       });
       if (!response.ok) {
         const message = await response.text();
