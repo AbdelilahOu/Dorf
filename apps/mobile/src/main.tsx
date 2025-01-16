@@ -17,6 +17,7 @@ import { profileRoute } from "./routes/app/profile";
 import { readingsRoute } from "./routes/app/readings";
 import { settingsRoute } from "./routes/app/settings";
 import { onBoardingRoute } from "./routes/onboarding";
+import { invoicesRoute } from "./routes/app/invoice";
 
 const queryClient = new QueryClient();
 const store = setupStore();
@@ -30,6 +31,7 @@ const routeTree = rootRoute.addChildren([
     housesRoute,
     profileRoute,
     settingsRoute,
+    invoicesRoute,
   ]),
 ]);
 
