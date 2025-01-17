@@ -18,8 +18,9 @@ import { readingsRoute } from "./routes/app/readings";
 import { settingsRoute } from "./routes/app/settings";
 import { onBoardingRoute } from "./routes/onboarding";
 import { invoicesRoute } from "./routes/app/invoice";
+import { getQueryClient } from "./lib/get-query-client";
 
-const queryClient = new QueryClient();
+const queryClient = getQueryClient();
 const store = setupStore();
 
 const routeTree = rootRoute.addChildren([
