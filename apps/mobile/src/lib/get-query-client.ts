@@ -1,5 +1,4 @@
 import { QueryClient } from "@tanstack/react-query";
-import { LazyStore } from "@tauri-apps/plugin-store";
 
 export function getQueryClient() {
   return new QueryClient({
