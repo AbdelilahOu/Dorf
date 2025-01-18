@@ -51,7 +51,7 @@ export const CreateHouseForm = ({ token }: Props) => {
 
   const createHouseMutation = useMutation({
     mutationFn: async (NewHouse: CreateHouseSchema) => {
-      const response = await fetch(`${SERVER_URL}/houses`, {
+      const response = await fetch(`${SERVER_URL}/api/houses`, {
         method: "POST",
         body: JSON.stringify(NewHouse),
         headers: new Headers({

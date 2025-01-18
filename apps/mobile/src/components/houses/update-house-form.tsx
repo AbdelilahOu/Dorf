@@ -54,7 +54,7 @@ export const UpdateHouseForm = ({ house, token }: Props) => {
   const updateHouseMutation = useMutation({
     mutationFn: async (updateHouse: UpdateHouseSchema) => {
       const response = await fetch(
-        `${SERVER_URL}/houses/${house.waterMeterId}`,
+        `${SERVER_URL}/api/houses/${house.waterMeterId}`,
         {
           method: "PUT",
           body: JSON.stringify(updateHouse),

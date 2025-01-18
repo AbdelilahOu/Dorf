@@ -40,14 +40,17 @@ export const DeleteHouseForm = ({ waterMeterId, token }: Props) => {
 
   const updateHouseMutation = useMutation({
     mutationFn: async (updateHouse: DeleteHouseSchema) => {
-      const response = await fetch(`${SERVER_URL}/houses/${waterMeterId}`, {
-        method: "PUT",
-        body: JSON.stringify(updateHouse),
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        }),
-      });
+      const response = await fetch(
+        `${SERVER_URL}/api/api/houses/${waterMeterId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(updateHouse),
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }),
+        },
+      );
       if (!response.ok) {
         const message = await response.text();
         throw new Error(message);

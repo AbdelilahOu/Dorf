@@ -1,147 +1,94 @@
-import {
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@dorf/ui/table";
 import type { SelectReading } from "@dorf/api/src/db/schema";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@dorf/ui/dropdown-menu";
 import { Button } from "@dorf/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@dorf/ui/card";
 import { Icons } from "@dorf/ui/icons";
 
-interface ReadingsTableProps<TData> {
-  data: TData[];
+interface ReadingsTableProps {
+  data: SelectReading[];
   onUpdate: (reading: SelectReading) => void;
   onDelete: (id: string) => void;
+  onPrintInvoice: (id: string) => void;
 }
 
-export function ReadingsTable<TData>({
+export function ReadingsTable({
   data,
   onDelete,
   onUpdate,
-}: ReadingsTableProps<TData>) {
-  const columns: ColumnDef<SelectReading>[] = [
-    {
-      accessorKey: "waterMeterId",
-      header: "Meter Id",
-    },
-    {
-      accessorKey: "amount",
-      header: "Amount",
-    },
-    {
-      accessorKey: "createdAt",
-      header: "Date",
-      cell: ({ row }) => {
-        const value = row.getValue<string>("createdAt");
-        return (
-          <time dateTime={value}>
-            {value
-              ? new Date(value).toLocaleDateString("fr-fr", {
-                  month: "long",
-                  year: "numeric",
-                })
-              : ""}
-          </time>
-        );
-      },
-    },
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => {
-        const reading = row.original;
-
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <Icons.MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => onUpdate(reading)}>
-                update
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete(reading.waterMeterId)}>
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
-    },
-  ];
-  const table = useReactTable({
-    data,
-    // @ts-ignore
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
+  onPrintInvoice,
+}: ReadingsTableProps) {
   return (
-    <div className="rounded-md border bg-white">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+    <div className="space-y-4">
+      {data.length > 0 ? (
+        data.map((reading) => (
+          <Card key={reading.waterMeterId} className="shadow-sm">
+            <CardHeader className="px-4 pt-5 pb-1">
+              <CardTitle>Reading Details</CardTitle>
+              <CardDescription>
+                Meter ID: {reading.waterMeterId}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 px-4 py-1">
+              <div className="grid grid-cols-2">
+                <div className="flex items-center justify-start">
+                  <div className="mr-2 flex items-center gap-2">
+                    <Icons.Droplet className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <span>{reading.amount} (ton)</span>
+                </div>
+                <div className="flex items-center justify-start">
+                  <div className="mr-2 flex items-center gap-2">
+                    <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <span>
+                    {reading.createdAt
+                      ? new Date(reading.createdAt).toLocaleDateString(
+                          "fr-fr",
+                          {
+                            month: "long",
+                            year: "numeric",
+                          },
+                        )
+                      : "N/A"}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="grid grid-cols-2 gap-2 px-4 py-4">
+              <Button
+                variant="default"
+                className="col-span-2"
+                onClick={() => onPrintInvoice(reading.waterMeterId)}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+                Print Invoice
+              </Button>
+              <Button variant="outline" onClick={() => onUpdate(reading)}>
+                Update
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => onDelete(reading.waterMeterId)}
+              >
+                Delete
+              </Button>
+            </CardFooter>
+          </Card>
+        ))
+      ) : (
+        <Card>
+          <CardHeader className="flex items-center justify-center">
+            <CardTitle>
+              <span className="text-gray-500">No results.</span>
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      )}
     </div>
   );
 }

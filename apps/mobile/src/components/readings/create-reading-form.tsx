@@ -56,7 +56,7 @@ export const CreateReadingForm = ({ token }: Props) => {
 
   const createReadingMutation = useMutation({
     mutationFn: async (reading: CreateReadingSchema) => {
-      const response = await fetch(`${SERVER_URL}/readings`, {
+      const response = await fetch(`${SERVER_URL}/api/api/readings`, {
         method: "POST",
         body: JSON.stringify({
           waterMeterId: reading.waterMeterId.toString(),

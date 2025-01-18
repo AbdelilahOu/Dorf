@@ -4,10 +4,12 @@ import {
   ChevronRight,
   CirclePlus,
   CircleUserRound,
+  Droplet,
   HouseIcon,
   LayoutGrid,
   List,
   LogOut,
+  MapPin,
   MoreHorizontal,
   UserCog,
 } from "lucide-react";
@@ -25,4 +27,6 @@ export const Icons = {
   Logout: LogOut,
   Calendar: CalendarIcon,
   MoreHorizontal,
+  MapPin,
+  Droplet,
 };

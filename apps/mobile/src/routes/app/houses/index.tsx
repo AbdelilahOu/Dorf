@@ -48,7 +48,7 @@ function HousesComponent() {
     queryKey: ["houses"],
     queryFn: async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/houses/`, {
+        const response = await fetch(`${SERVER_URL}/api/houses/`, {
           method: "GET",
           headers: new Headers({ Authorization: `Bearer ${token}` }),
         });

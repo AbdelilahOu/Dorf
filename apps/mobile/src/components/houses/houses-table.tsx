@@ -1,151 +1,76 @@
-import {
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@dorf/ui/table";
 import type { SelectHouse } from "@dorf/api/src/db/schema";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@dorf/ui/dropdown-menu";
 import { Button } from "@dorf/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@dorf/ui/card";
 import { Icons } from "@dorf/ui/icons";
 
-interface HousesTableProps<TData> {
-  data: TData[];
+interface HousesTableProps {
+  data: SelectHouse[];
   onUpdate: (house: SelectHouse) => void;
   onDelete: (id: string) => void;
 }
 
-export function HousesTable<TData>({
-  data,
-  onDelete,
-  onUpdate,
-}: HousesTableProps<TData>) {
-  const columns: ColumnDef<SelectHouse>[] = [
-    {
-      accessorKey: "waterMeterId",
-      header: "ID",
-    },
-    {
-      accessorKey: "name",
-      header: "House name",
-    },
-    {
-      accessorKey: "district",
-      header: "District",
-    },
-    {
-      accessorKey: "createdAt",
-      header: "Date",
-      cell: ({ row }) => {
-        const value = row.getValue<string>("createdAt");
-        return (
-          <time dateTime={value}>
-            {value
-              ? new Date(value).toLocaleDateString("fr-fr", {
-                  month: "long",
-                  year: "numeric",
-                })
-              : ""}
-          </time>
-        );
-      },
-    },
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => {
-        const house = row.original;
-
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <Icons.MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => onUpdate(house)}>
-                update
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete(house.waterMeterId)}>
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
-    },
-  ];
-  const table = useReactTable({
-    data,
-    // @ts-ignore
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
+export function HousesTable({ data, onDelete, onUpdate }: HousesTableProps) {
   return (
-    <div className="rounded-md border bg-white">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody className="bg-white">
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+    <div className="space-y-4">
+      {data.length > 0 ? (
+        data.map((house) => (
+          <Card key={house.waterMeterId} className="shadow-sm">
+            <CardHeader className="px-4 pt-5 pb-1">
+              <CardTitle>{house.name}</CardTitle>
+              <CardDescription>ID: {house.waterMeterId}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 px-4 py-1">
+              <div className="grid grid-cols-2">
+                <div className="flex items-center justify-start">
+                  <div className="mr-2 flex items-center gap-2">
+                    <Icons.MapPin className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <span>{house.district}</span>
+                </div>
+                <div className="flex items-center justify-start">
+                  <div className="mr-2 flex items-center gap-2">
+                    <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <span>
+                    {house.createdAt
+                      ? new Date(house.createdAt).toLocaleDateString("fr-fr", {
+                          month: "long",
+                          year: "numeric",
+                        })
+                      : "N/A"}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="grid grid-cols-2 gap-2 px-4 py-4">
+              <Button variant="outline" onClick={() => onUpdate(house)}>
+                Update
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => onDelete(house.waterMeterId)}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+                Delete
+              </Button>
+            </CardFooter>
+          </Card>
+        ))
+      ) : (
+        <Card>
+          <CardHeader className="flex items-center justify-center">
+            <CardTitle>
+              <span className="text-gray-500">No results.</span>
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      )}
     </div>
   );
 }

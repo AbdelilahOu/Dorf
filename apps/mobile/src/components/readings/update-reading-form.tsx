@@ -51,14 +51,17 @@ export const UpdateReadingForm = ({ reading, token }: Props) => {
 
   const updateReadingMutation = useMutation({
     mutationFn: async ({ amount }: UpdateReadingSchema) => {
-      const response = await fetch(`${SERVER_URL}/readings/${reading.id}`, {
-        method: "PUT",
-        body: JSON.stringify({ amount }),
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        }),
-      });
+      const response = await fetch(
+        `${SERVER_URL}/api/api/readings/${reading.id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ amount }),
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }),
+        },
+      );
       if (!response.ok) {
         const message = await response.text();
         throw new Error(message);

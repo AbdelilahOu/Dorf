@@ -48,7 +48,7 @@ function ReadingsComponent() {
     queryKey: ["readings"],
     queryFn: async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/readings/`, {
+        const response = await fetch(`${SERVER_URL}/api/readings/`, {
           method: "GET",
           headers: new Headers({ Authorization: `Bearer ${token}` }),
         });
@@ -87,6 +87,7 @@ function ReadingsComponent() {
         onUpdate={(reading: SelectReading) =>
           handleOpenDrawer("UPDATE_READING", reading)
         }
+        onPrintInvoice={() => {}}
       />
       <Drawer
         fixed={true}
