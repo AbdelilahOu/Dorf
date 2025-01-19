@@ -30,6 +30,21 @@ export function setupAuth(c: Context) {
       usePlural: true,
       schema: schema,
     }),
+    user: {
+      modelName: "users",
+      additionalFields: {
+        nic: {
+          type: "string",
+          required: true,
+          input: true,
+        },
+        role: {
+          type: "string",
+          required: false,
+          input: false,
+        },
+      },
+    },
     advanced: {
       defaultCookieAttributes: {
         sameSite: "None",

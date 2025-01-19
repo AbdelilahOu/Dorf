@@ -16,35 +16,35 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
 
-const updateHouseSchema = z.object({
-  waterMeterId: z.string().min(1, { message: "House id is required" }),
+const updateWaterMeterSchema = z.object({
+  waterMeterId: z.string().min(1, { message: "WaterMeter id is required" }),
 });
 
-type DeleteHouseSchema = z.infer<typeof updateHouseSchema>;
+type DeleteWaterMeterSchema = z.infer<typeof updateWaterMeterSchema>;
 
 type Props = {
   token: string;
   waterMeterId: string;
 };
 
-export const DeleteHouseForm = ({ waterMeterId, token }: Props) => {
+export const DeleteWaterMeterForm = ({ waterMeterId, token }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const form = useForm<DeleteHouseSchema>({
-    resolver: zodResolver(updateHouseSchema),
+  const form = useForm<DeleteWaterMeterSchema>({
+    resolver: zodResolver(updateWaterMeterSchema),
     defaultValues: {
       waterMeterId,
     },
   });
 
-  const updateHouseMutation = useMutation({
-    mutationFn: async (updateHouse: DeleteHouseSchema) => {
+  const updateWaterMeterMutation = useMutation({
+    mutationFn: async (updateWaterMeter: DeleteWaterMeterSchema) => {
       const response = await fetch(
-        `${SERVER_URL}/api/api/houses/${waterMeterId}`,
+        `${SERVER_URL}/api/v1/api/water-meters/${waterMeterId}`,
         {
           method: "PUT",
-          body: JSON.stringify(updateHouse),
+          body: JSON.stringify(updateWaterMeter),
           headers: new Headers({
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -57,16 +57,16 @@ export const DeleteHouseForm = ({ waterMeterId, token }: Props) => {
       }
     },
     onSuccess: () => {
-      toast({ title: "House Deleted" });
-      queryClient.invalidateQueries({ queryKey: ["houses"] });
+      toast({ title: "WaterMeter Deleted" });
+      queryClient.invalidateQueries({ queryKey: ["water-meters"] });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });
     },
   });
 
-  const onSubmit = (data: DeleteHouseSchema) => {
-    updateHouseMutation.mutate(data);
+  const onSubmit = (data: DeleteWaterMeterSchema) => {
+    updateWaterMeterMutation.mutate(data);
   };
 
   return (
@@ -86,9 +86,9 @@ export const DeleteHouseForm = ({ waterMeterId, token }: Props) => {
             <Button
               type="submit"
               variant="destructive"
-              disabled={updateHouseMutation.isPending}
+              disabled={updateWaterMeterMutation.isPending}
             >
-              {updateHouseMutation.isPending ? "Deleting..." : "Delete House"}
+              {updateWaterMeterMutation.isPending ? "Deleting..." : "Delete WaterMeter"}
             </Button>
           </DrawerFooter>
         </form>

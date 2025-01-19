@@ -115,8 +115,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "houses": {
-      "name": "houses",
+    "water-meters": {
+      "name": "water-meters",
       "columns": {
         "water-meter-id": {
           "name": "water-meter-id",
@@ -172,9 +172,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "houses_head-of-household_users_id_fk": {
-          "name": "houses_head-of-household_users_id_fk",
-          "tableFrom": "houses",
+        "water-meters_head-of-household_users_id_fk": {
+          "name": "water-meters_head-of-household_users_id_fk",
+          "tableFrom": "water-meters",
           "tableTo": "users",
           "columnsFrom": ["head-of-household"],
           "columnsTo": ["id"],
@@ -428,10 +428,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "water_meter_readings_water_meter_id_houses_water-meter-id_fk": {
-          "name": "water_meter_readings_water_meter_id_houses_water-meter-id_fk",
+        "water_meter_readings_water_meter_id_water-meters_water-meter-id_fk": {
+          "name": "water_meter_readings_water_meter_id_water-meters_water-meter-id_fk",
           "tableFrom": "water_meter_readings",
-          "tableTo": "houses",
+          "tableTo": "water-meters",
           "columnsFrom": ["water_meter_id"],
           "columnsTo": ["water-meter-id"],
           "onDelete": "restrict",

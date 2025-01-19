@@ -1,4 +1,4 @@
-import type { SelectHouse } from "@dorf/api/src/db/schema";
+import type { SelectReading } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
 import {
   Card,
@@ -10,52 +10,70 @@ import {
 } from "@dorf/ui/card";
 import { Icons } from "@dorf/ui/icons";
 
-interface HousesTableProps {
-  data: SelectHouse[];
-  onUpdate: (house: SelectHouse) => void;
+interface ReadingsProps {
+  data: SelectReading[];
+  onUpdate: (reading: SelectReading) => void;
   onDelete: (id: string) => void;
+  onPrintInvoice: (id: string) => void;
 }
 
-export function HousesTable({ data, onDelete, onUpdate }: HousesTableProps) {
+export function Readings({
+  data,
+  onDelete,
+  onUpdate,
+  onPrintInvoice,
+}: ReadingsProps) {
   return (
     <div className="space-y-4">
       {data.length > 0 ? (
-        data.map((house) => (
-          <Card key={house.waterMeterId} className="shadow-sm">
+        data.map((reading) => (
+          <Card key={reading.waterMeterId} className="shadow-sm">
             <CardHeader className="px-4 pt-5 pb-1">
-              <CardTitle>{house.name}</CardTitle>
-              <CardDescription>ID: {house.waterMeterId}</CardDescription>
+              <CardTitle>Reading Details</CardTitle>
+              <CardDescription>
+                Meter ID: {reading.waterMeterId}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2 px-4 py-1">
               <div className="grid grid-cols-2">
                 <div className="flex items-center justify-start">
                   <div className="mr-2 flex items-center gap-2">
-                    <Icons.MapPin className="h-4 w-4 text-muted-foreground" />
+                    <Icons.Droplet className="h-4 w-4 text-muted-foreground" />
                   </div>
-                  <span>{house.district}</span>
+                  <span>{reading.amount} (ton)</span>
                 </div>
                 <div className="flex items-center justify-start">
                   <div className="mr-2 flex items-center gap-2">
                     <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <span>
-                    {house.createdAt
-                      ? new Date(house.createdAt).toLocaleDateString("fr-fr", {
-                          month: "long",
-                          year: "numeric",
-                        })
+                    {reading.createdAt
+                      ? new Date(reading.createdAt).toLocaleDateString(
+                          "fr-fr",
+                          {
+                            month: "long",
+                            year: "numeric",
+                          },
+                        )
                       : "N/A"}
                   </span>
                 </div>
               </div>
             </CardContent>
             <CardFooter className="grid grid-cols-2 gap-2 px-4 py-4">
-              <Button variant="outline" onClick={() => onUpdate(house)}>
+              <Button
+                variant="default"
+                className="col-span-2"
+                onClick={() => onPrintInvoice(reading.waterMeterId)}
+              >
+                Print Invoice
+              </Button>
+              <Button variant="outline" onClick={() => onUpdate(reading)}>
                 Update
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => onDelete(house.waterMeterId)}
+                onClick={() => onDelete(reading.waterMeterId)}
               >
                 Delete
               </Button>

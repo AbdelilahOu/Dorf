@@ -23,6 +23,9 @@ function GettingStartedComponent() {
       <Button onTouchStart={() => navigate({ to: "/app/auth/signup" })}>
         Getting started
       </Button>
+      <Button onTouchStart={() => navigate({ to: "/app/auth/signup" })}>
+        Getting started
+      </Button>
     </div>
   );
 }

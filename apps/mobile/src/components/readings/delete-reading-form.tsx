@@ -40,7 +40,7 @@ export const DeleteReadingForm = ({ id, token }: Props) => {
 
   const updateReadingMutation = useMutation({
     mutationFn: async (updateReading: DeleteReadingSchema) => {
-      const response = await fetch(`${SERVER_URL}/api/api/readings/${id}`, {
+      const response = await fetch(`${SERVER_URL}/api/v1/api/readings/${id}`, {
         method: "PUT",
         body: JSON.stringify(updateReading),
         headers: new Headers({

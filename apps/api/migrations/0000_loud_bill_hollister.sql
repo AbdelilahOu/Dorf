@@ -15,7 +15,7 @@ CREATE TABLE `accounts` (
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE TABLE `houses` (
+CREATE TABLE `water-meters` (
 	`water-meter-id` text PRIMARY KEY NOT NULL,
 	`house_name` text,
 	`district` text NOT NULL,
@@ -65,5 +65,5 @@ CREATE TABLE `water_meter_readings` (
 	`amount` real NOT NULL,
 	`reading_date` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`created_at` text DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
-	FOREIGN KEY (`water_meter_id`) REFERENCES `houses`(`water-meter-id`) ON UPDATE no action ON DELETE restrict
+	FOREIGN KEY (`water_meter_id`) REFERENCES `water-meters`(`water-meter-id`) ON UPDATE no action ON DELETE restrict
 );

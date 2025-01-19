@@ -1,4 +1,4 @@
-import type { SelectReading } from "@dorf/api/src/db/schema";
+import type { SelectWaterMeter } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
 import {
   Card,
@@ -10,45 +10,35 @@ import {
 } from "@dorf/ui/card";
 import { Icons } from "@dorf/ui/icons";
 
-interface ReadingsTableProps {
-  data: SelectReading[];
-  onUpdate: (reading: SelectReading) => void;
+interface WaterMetersTableProps {
+  data: SelectWaterMeter[];
+  onUpdate: (house: SelectWaterMeter) => void;
   onDelete: (id: string) => void;
-  onPrintInvoice: (id: string) => void;
 }
 
-export function ReadingsTable({
+export function WaterMeters({
   data,
   onDelete,
   onUpdate,
-  onPrintInvoice,
-}: ReadingsTableProps) {
+}: WaterMetersTableProps) {
   return (
     <div className="space-y-4">
       {data.length > 0 ? (
-        data.map((reading) => (
-          <Card key={reading.waterMeterId} className="shadow-sm">
+        data.map((waterMeter) => (
+          <Card key={waterMeter.id} className="shadow-sm">
             <CardHeader className="px-4 pt-5 pb-1">
-              <CardTitle>Reading Details</CardTitle>
-              <CardDescription>
-                Meter ID: {reading.waterMeterId}
-              </CardDescription>
+              <CardTitle>{waterMeter.name}</CardTitle>
+              <CardDescription>ID: {waterMeter.id}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2 px-4 py-1">
               <div className="grid grid-cols-2">
                 <div className="flex items-center justify-start">
                   <div className="mr-2 flex items-center gap-2">
-                    <Icons.Droplet className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                  <span>{reading.amount} (ton)</span>
-                </div>
-                <div className="flex items-center justify-start">
-                  <div className="mr-2 flex items-center gap-2">
                     <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <span>
-                    {reading.createdAt
-                      ? new Date(reading.createdAt).toLocaleDateString(
+                    {waterMeter.createdAt
+                      ? new Date(waterMeter.createdAt).toLocaleDateString(
                           "fr-fr",
                           {
                             month: "long",
@@ -61,19 +51,12 @@ export function ReadingsTable({
               </div>
             </CardContent>
             <CardFooter className="grid grid-cols-2 gap-2 px-4 py-4">
-              <Button
-                variant="default"
-                className="col-span-2"
-                onClick={() => onPrintInvoice(reading.waterMeterId)}
-              >
-                Print Invoice
-              </Button>
-              <Button variant="outline" onClick={() => onUpdate(reading)}>
+              <Button variant="outline" onClick={() => onUpdate(waterMeter)}>
                 Update
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => onDelete(reading.waterMeterId)}
+                onClick={() => onDelete(waterMeter.id)}
               >
                 Delete
               </Button>

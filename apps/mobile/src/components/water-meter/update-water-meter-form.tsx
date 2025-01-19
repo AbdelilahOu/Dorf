@@ -23,41 +23,40 @@ import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
-import type { SelectHouse } from "@dorf/api/src/db/schema";
+import type { SelectWaterMeter } from "@dorf/api/src/db/schema";
 
-const updateHouseSchema = z.object({
-  waterMeterId: z.string().min(1, { message: "Water meter ID is required" }),
+const updateWaterMeterSchema = z.object({
+  id: z.string().min(1, { message: "Water meter ID is required" }),
   district: z.string().min(1, { message: "District is required" }),
   name: z.string().optional(),
 });
 
-type UpdateHouseSchema = z.infer<typeof updateHouseSchema>;
+type UpdateWaterMeterSchema = z.infer<typeof updateWaterMeterSchema>;
 
 type Props = {
-  house: SelectHouse;
+  waterMeter: SelectWaterMeter;
   token: string;
 };
 
-export const UpdateHouseForm = ({ house, token }: Props) => {
+export const UpdateWaterMeterForm = ({ waterMeter, token }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const form = useForm<UpdateHouseSchema>({
-    resolver: zodResolver(updateHouseSchema),
+  const form = useForm<UpdateWaterMeterSchema>({
+    resolver: zodResolver(updateWaterMeterSchema),
     defaultValues: {
-      waterMeterId: house.waterMeterId,
-      district: house.district,
-      name: house.name || undefined,
+      id: waterMeter.id,
+      name: waterMeter.name || undefined,
     },
   });
 
-  const updateHouseMutation = useMutation({
-    mutationFn: async (updateHouse: UpdateHouseSchema) => {
+  const updateWaterMeterMutation = useMutation({
+    mutationFn: async (updateWaterMeter: UpdateWaterMeterSchema) => {
       const response = await fetch(
-        `${SERVER_URL}/api/houses/${house.waterMeterId}`,
+        `${SERVER_URL}/api/v1/water-meters/${waterMeter.id}`,
         {
           method: "PUT",
-          body: JSON.stringify(updateHouse),
+          body: JSON.stringify(updateWaterMeter),
           headers: new Headers({
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -70,16 +69,16 @@ export const UpdateHouseForm = ({ house, token }: Props) => {
       }
     },
     onSuccess: () => {
-      toast({ title: "House Updated" });
-      queryClient.invalidateQueries({ queryKey: ["houses"] });
+      toast({ title: "WaterMeter Updated" });
+      queryClient.invalidateQueries({ queryKey: ["water-meters"] });
     },
     onError: (error: any) => {
       toast({ title: `Error: ${error.message}`, variant: "destructive" });
     },
   });
 
-  const onSubmit = (data: UpdateHouseSchema) => {
-    updateHouseMutation.mutate(data);
+  const onSubmit = (data: UpdateWaterMeterSchema) => {
+    updateWaterMeterMutation.mutate(data);
   };
 
   return (
@@ -92,7 +91,7 @@ export const UpdateHouseForm = ({ house, token }: Props) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
           <FormField
             control={form.control}
-            name="waterMeterId"
+            name="id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Water Meter ID</FormLabel>
@@ -121,9 +120,9 @@ export const UpdateHouseForm = ({ house, token }: Props) => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name of the house</FormLabel>
+                <FormLabel>Name of the waterMeter</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter House name" {...field} />
+                  <Input placeholder="Enter WaterMeter name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -135,8 +134,10 @@ export const UpdateHouseForm = ({ house, token }: Props) => {
                 close
               </Button>
             </DrawerClose>
-            <Button type="submit" disabled={updateHouseMutation.isPending}>
-              {updateHouseMutation.isPending ? "Updating..." : "Update House"}
+            <Button type="submit" disabled={updateWaterMeterMutation.isPending}>
+              {updateWaterMeterMutation.isPending
+                ? "Updating..."
+                : "Update WaterMeter"}
             </Button>
           </DrawerFooter>
         </form>

@@ -14,16 +14,16 @@ export function BottomNavigation({ user }: { user?: SelectUser }) {
         })}
         to="/app"
       >
-        <Icons.House />
+        <Icons.WaterMeter />
       </Link>
       <Link
         className={buttonVariants({
           size: "icon",
           variant: "ghost",
         })}
-        to="/app/houses"
+        to="/app/water-meters"
       >
-        <Icons.Houses />
+        <Icons.WaterMeters />
       </Link>
       <Link
         className={buttonVariants({
@@ -33,15 +33,6 @@ export function BottomNavigation({ user }: { user?: SelectUser }) {
         to="/app/readings"
       >
         <Icons.MeterReadings />
-      </Link>
-      <Link
-        className={buttonVariants({
-          size: "icon",
-          variant: "ghost",
-        })}
-        to="/app/profile"
-      >
-        <Icons.Profile />
       </Link>
       <Link
         className={buttonVariants({

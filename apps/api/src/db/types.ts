@@ -7,8 +7,8 @@ export type {
   SelectAccount,
   InsertVerification,
   SelectVerification,
-  InsertHouse,
-  SelectHouse,
+  InsertWaterMeter,
+  SelectWaterMeter,
   InsertReading,
   SelectReading,
 } from "./schema";

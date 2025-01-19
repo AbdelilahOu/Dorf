@@ -1,4 +1,4 @@
-import type { SelectHouse, SelectUser } from "@dorf/api/src/db/schema";
+import type { SelectWaterMeter, SelectUser } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
 import { Drawer } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
@@ -7,16 +7,18 @@ import { createRoute } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useState } from "react";
 import { SERVER_URL } from "../../../../env";
-import { CreateHouseForm } from "../../../components/houses/create-house-form";
-import { DeleteHouseForm } from "../../../components/houses/delete-house-form";
-import { HousesTable } from "../../../components/houses/houses-table";
-import { UpdateHouseForm } from "../../../components/houses/update-house-form";
+import {
+  CreateWaterMeterForm,
+  DeleteWaterMeterForm,
+  WaterMeters,
+  UpdateWaterMeterForm,
+} from "../../../components/water-meter";
 import { appLayoutRoute } from "../app-layout";
 
-export const housesRoute = createRoute({
+export const waterMetersRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
-  path: "houses",
-  component: HousesComponent,
+  path: "water-meters",
+  component: WaterMetersComponent,
   loader: async ({ context }) => {
     const token = await context.store.get<string>("token");
     return {
@@ -25,30 +27,30 @@ export const housesRoute = createRoute({
   },
 });
 
-function HousesComponent() {
+function WaterMetersComponent() {
   const { toast } = useToast();
-  const { user, token } = housesRoute.useLoaderData() as {
+  const { user, token } = waterMetersRoute.useLoaderData() as {
     user: SelectUser;
     token: string;
   };
 
   const [openDrawer, setOpenDrawer] = useState(false);
   const [whichDrawer, setWichDrawer] = useState<
-    "UPDATE_HOUSE" | "DELETE_HOUSE" | "CREATE_HOUSE" | undefined
+    "UPDATE_METER" | "DELETE_METER" | "CREATE_METER" | undefined
   >(undefined);
   const [drawerProps, setDrawerProps] = useState<any>({});
 
   const DRAWERS = {
-    CREATE_HOUSE: CreateHouseForm,
-    UPDATE_HOUSE: UpdateHouseForm,
-    DELETE_HOUSE: DeleteHouseForm,
+    CREATE_METER: CreateWaterMeterForm,
+    UPDATE_METER: UpdateWaterMeterForm,
+    DELETE_METER: DeleteWaterMeterForm,
   };
 
   const { data, error } = useQuery({
-    queryKey: ["houses"],
+    queryKey: ["water-meters"],
     queryFn: async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/api/houses/`, {
+        const response = await fetch(`${SERVER_URL}/api/v1/water-meters/`, {
           method: "GET",
           headers: new Headers({ Authorization: `Bearer ${token}` }),
         });
@@ -66,26 +68,27 @@ function HousesComponent() {
     retry: false,
   });
 
-  function handleOpenDrawer(drawer: string, house?: Partial<SelectHouse>) {
-    setWichDrawer(drawer as "UPDATE_HOUSE" | "DELETE_HOUSE" | "CREATE_HOUSE");
-    setDrawerProps({ house, token });
+  function handleOpenDrawer(
+    drawer: string,
+    waterMeter?: Partial<SelectWaterMeter>,
+  ) {
+    setWichDrawer(drawer as "UPDATE_METER" | "DELETE_METER" | "CREATE_METER");
+    setDrawerProps({ waterMeter, token });
     setOpenDrawer(true);
   }
 
   return (
     <div className="h-full w-full">
       <div className="flex justify-end py-2">
-        <Button onClick={() => handleOpenDrawer("CREATE_HOUSE")}>
-          Add house
+        <Button onClick={() => handleOpenDrawer("CREATE_METER")}>
+          Add waterMeter
         </Button>
       </div>
-      <HousesTable
+      <WaterMeters
         data={data || []}
-        onDelete={(id) =>
-          handleOpenDrawer("DELETE_HOUSE", { waterMeterId: id })
-        }
-        onUpdate={(house: SelectHouse) =>
-          handleOpenDrawer("UPDATE_HOUSE", house)
+        onDelete={(id) => handleOpenDrawer("DELETE_METER", { id })}
+        onUpdate={(waterMeter: SelectWaterMeter) =>
+          handleOpenDrawer("UPDATE_METER", waterMeter)
         }
       />
       <Drawer

@@ -7,10 +7,12 @@ import { createRoute } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useState } from "react";
 import { SERVER_URL } from "../../../../env";
-import { CreateReadingForm } from "../../../components/readings/create-reading-form";
-import { DeleteReadingForm } from "../../../components/readings/delete-reading-form";
-import { ReadingsTable } from "../../../components/readings/readings-table";
-import { UpdateReadingForm } from "../../../components/readings/update-reading-form";
+import {
+  CreateReadingForm,
+  DeleteReadingForm,
+  Readings,
+  UpdateReadingForm,
+} from "../../../components/readings";
 import { appLayoutRoute } from "../app-layout";
 
 export const readingsRoute = createRoute({
@@ -48,7 +50,7 @@ function ReadingsComponent() {
     queryKey: ["readings"],
     queryFn: async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/api/readings/`, {
+        const response = await fetch(`${SERVER_URL}/api/v1/readings/`, {
           method: "GET",
           headers: new Headers({ Authorization: `Bearer ${token}` }),
         });
@@ -81,7 +83,7 @@ function ReadingsComponent() {
           Add reading
         </Button>
       </div>
-      <ReadingsTable
+      <Readings
         data={data || []}
         onDelete={(id) => handleOpenDrawer("DELETE_READING", { id })}
         onUpdate={(reading: SelectReading) =>

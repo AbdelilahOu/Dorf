@@ -6,22 +6,22 @@ import {
   corsMiddleware,
   pinoLoggerMiddleware,
 } from "@/middleware";
-import houses from "./routes/houses";
 import readings from "./routes/readings";
+import waterMeters from "./routes/water-meters";
 
 const app = createApp();
 
 configureOpenAPI(app);
 
-app.use("*", authMiddleware);
+app.use("/api/v1/*", authMiddleware);
 app.use("*", corsMiddleware());
-app.use(pinoLoggerMiddleware());
+app.use("*", pinoLoggerMiddleware());
 
 app.on(["POST", "GET"], "/api/auth/**", (c) => {
   return setupAuth(c).handler(c.req.raw);
 });
 
-app.route("/api/houses", houses);
-app.route("/api/readings", readings);
+app.route("/api/v1/water-meters", waterMeters);
+app.route("/api/v1/readings", readings);
 
 export default app;

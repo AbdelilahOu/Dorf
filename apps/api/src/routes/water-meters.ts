@@ -1,53 +1,42 @@
 import { createDatabaseConnection } from "@/db";
-import { houses } from "@/db/schema";
+import { waterMeters } from "@/db/schema";
 import { createRouter } from "@/lib/create-app";
 import { createRoute } from "@hono/zod-openapi";
 import { and, eq, not, sql } from "drizzle-orm";
 import { z } from "zod";
 
-const insertHouseSchema = z.object({
-  waterMeterId: z.string(),
-  district: z.string(),
-  name: z.string(),
-});
-
-const updateHouseSchema = z.object({
-  waterMeterId: z.string().optional(),
-  district: z.string().optional(),
+const insertWaterMeterSchema = z.object({
+  id: z.string(),
   name: z.string().optional(),
 });
 
-const houseSchema = z.object({
-  waterMeterId: z.string(),
-  district: z.string(),
-  headOfHousehold: z.string().nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date().nullable(),
-  deleted: z.boolean(),
+const updateWaterMeterSchema = z.object({
+  name: z.string().optional(),
 });
 
-const housesRoute = createRouter()
+const waterMeterSchema = z.object({
+  id: z.string(),
+  name: z.string().nullable(),
+  userId: z.string().nullable(),
+  deleted: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date().nullable(),
+});
+
+const waterMeterRoute = createRouter()
   .openapi(
     createRoute({
       method: "get",
       path: "/",
-      summary: "Get all non-deleted houses",
+      summary: "Get all non-deleted water meters",
       responses: {
         200: {
           content: {
             "application/json": {
-              schema: z.array(
-                z.object({
-                  waterMeterId: z.string(),
-                  name: z.string().nullable(),
-                  district: z.string(),
-                  headOfHousehold: z.string().nullable(),
-                  createdAt: z.string(),
-                }),
-              ),
+              schema: z.array(waterMeterSchema),
             },
           },
-          description: "Retrieve all non-deleted houses",
+          description: "Retrieve all non-deleted water meters",
         },
         500: {
           description: "Internal server error",
@@ -62,13 +51,13 @@ const housesRoute = createRouter()
         );
         const data = await db
           .select()
-          .from(houses)
-          .where(not(eq(houses.deleted, true)))
-          .orderBy(sql`${houses.updatedAt} desc`)
+          .from(waterMeters)
+          .where(not(eq(waterMeters.deleted, true)))
+          .orderBy(sql`${waterMeters.updatedAt} desc`)
           .all();
         return c.json(data, 200);
       } catch (error) {
-        c.var.logger.error("Error fetching houses:", error);
+        c.var.logger.error("Error fetching water meters:", error);
         return c.text("Internal server error", 500);
       }
     },
@@ -77,7 +66,7 @@ const housesRoute = createRouter()
     createRoute({
       method: "get",
       path: "/:id",
-      summary: "Get a house by ID",
+      summary: "Get a water meter by ID",
       request: {
         params: z.object({ id: z.coerce.string() }),
       },
@@ -85,13 +74,13 @@ const housesRoute = createRouter()
         200: {
           content: {
             "application/json": {
-              schema: houseSchema,
+              schema: waterMeterSchema,
             },
           },
-          description: "Retrieve one house",
+          description: "Retrieve one water meter",
         },
         404: {
-          description: "House not found",
+          description: "Water meter not found",
         },
         500: {
           description: "Internal server error",
@@ -107,21 +96,21 @@ const housesRoute = createRouter()
 
         const id = c.req.valid("param").id;
 
-        const house = await db
+        const meter = await db
           .select()
-          .from(houses)
+          .from(waterMeters)
           .where(
-            and(eq(houses.waterMeterId, id), not(eq(houses.deleted, true))),
+            and(eq(waterMeters.id, id), not(eq(waterMeters.deleted, true))),
           )
           .get();
 
-        if (!house) {
-          return c.text("House not found", 404);
+        if (!meter) {
+          return c.text("Water meter not found", 404);
         }
 
-        return c.json(house, 200);
+        return c.json(meter, 200);
       } catch (error) {
-        c.var.logger.error("Error fetching house by ID:", error);
+        c.var.logger.error("Error fetching water meter by ID:", error);
         return c.text("Internal server error", 500);
       }
     },
@@ -130,12 +119,12 @@ const housesRoute = createRouter()
     createRoute({
       method: "post",
       path: "/",
-      summary: "Create a new house",
+      summary: "Create a new water meter",
       request: {
         body: {
           content: {
             "application/json": {
-              schema: insertHouseSchema,
+              schema: insertWaterMeterSchema,
             },
           },
         },
@@ -144,10 +133,10 @@ const housesRoute = createRouter()
         201: {
           content: {
             "application/json": {
-              schema: houseSchema,
+              schema: waterMeterSchema,
             },
           },
-          description: "Create a new house",
+          description: "Create a new water meter",
         },
         400: {
           description: "Invalid input",
@@ -162,21 +151,21 @@ const housesRoute = createRouter()
         c.env.TURSO_CONNECTION_URL,
         c.env.TURSO_AUTH_TOKEN,
       );
-      const newHouse = c.req.valid("json");
-      c.var.logger.info(newHouse);
+      const newMeter = c.req.valid("json");
+      c.var.logger.info(newMeter);
       try {
-        const insertedHouse = await db
-          .insert(houses)
+        const insertedMeter = await db
+          .insert(waterMeters)
           .values({
-            ...newHouse,
+            ...newMeter,
             deleted: false,
           })
           .returning()
           .get();
-        return c.json(insertedHouse, 201);
+        return c.json(insertedMeter, 201);
       } catch (error) {
-        c.var.logger.error("Error creating house:", error);
-        return c.text("Error creating house", 400);
+        c.var.logger.error("Error creating water meter:", error);
+        return c.text("Error creating water meter", 400);
       }
     },
   )
@@ -184,13 +173,13 @@ const housesRoute = createRouter()
     createRoute({
       method: "put",
       path: "/:id",
-      summary: "Update a house by ID",
+      summary: "Update a water meter by ID",
       request: {
         params: z.object({ id: z.coerce.string() }),
         body: {
           content: {
             "application/json": {
-              schema: updateHouseSchema,
+              schema: updateWaterMeterSchema,
             },
           },
         },
@@ -199,16 +188,16 @@ const housesRoute = createRouter()
         200: {
           content: {
             "application/json": {
-              schema: houseSchema,
+              schema: waterMeterSchema,
             },
           },
-          description: "Update a house by ID",
+          description: "Update a water meter by ID",
         },
         400: {
           description: "Invalid input",
         },
         404: {
-          description: "House not found",
+          description: "Water meter not found",
         },
         500: {
           description: "Internal server error",
@@ -221,21 +210,23 @@ const housesRoute = createRouter()
         c.env.TURSO_AUTH_TOKEN,
       );
       const id = c.req.valid("param").id;
-      const updatedHouse = c.req.valid("json");
+      const updatedMeter = c.req.valid("json");
       try {
-        const house = await db
-          .update(houses)
-          .set(updatedHouse)
-          .where(eq(houses.waterMeterId, id))
+        const meter = await db
+          .update(waterMeters)
+          .set({
+            ...updatedMeter,
+          })
+          .where(eq(waterMeters.id, id))
           .returning()
           .get();
-        if (!house) {
-          return c.text("House not found", 404);
+        if (!meter) {
+          return c.text("Water meter not found", 404);
         }
-        return c.json(house);
+        return c.json(meter);
       } catch (error) {
-        c.var.logger.error("Error updating house:", error);
-        return c.text("Error updating house", 400);
+        c.var.logger.error("Error updating water meter:", error);
+        return c.text("Error updating water meter", 400);
       }
     },
   )
@@ -243,16 +234,16 @@ const housesRoute = createRouter()
     createRoute({
       method: "delete",
       path: "/:id",
-      summary: "Soft delete a house by ID",
+      summary: "Soft delete a water meter by ID",
       request: {
         params: z.object({ id: z.coerce.string() }),
       },
       responses: {
         204: {
-          description: "House soft deleted successfully",
+          description: "Water meter soft deleted successfully",
         },
         404: {
-          description: "House not found",
+          description: "Water meter not found",
         },
         500: {
           description: "Internal server error",
@@ -266,27 +257,27 @@ const housesRoute = createRouter()
       );
       const id = c.req.valid("param").id;
       try {
-        const house = await db
+        const meter = await db
           .select()
-          .from(houses)
+          .from(waterMeters)
           .where(
-            and(eq(houses.waterMeterId, id), not(eq(houses.deleted, true))),
+            and(eq(waterMeters.id, id), not(eq(waterMeters.deleted, true))),
           )
           .get();
-        if (!house) {
-          return c.text("House not found", 404);
+        if (!meter) {
+          return c.text("Water meter not found", 404);
         }
         await db
-          .update(houses)
-          .set({ deleted: true })
-          .where(eq(houses.waterMeterId, id))
+          .update(waterMeters)
+          .set({ deleted: true, updatedAt: new Date() }) // Soft delete and update timestamp
+          .where(eq(waterMeters.id, id))
           .run();
-        return c.text("delete successfully", 204);
+        return c.text("Deleted successfully", 204);
       } catch (error) {
-        c.var.logger.error("Error soft deleting house:", error);
-        return c.text("Error soft deleting house", 500);
+        c.var.logger.error("Error soft deleting water meter:", error);
+        return c.text("Error soft deleting water meter", 500);
       }
     },
   );
 
-export default housesRoute;
+export default waterMeterRoute;

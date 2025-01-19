@@ -28,9 +28,13 @@ export const authMiddleware = createMiddleware(
 
 export function corsMiddleware() {
   return cors({
-    origin: ["http://192.168.1.115:3000", "http://localhost:3003"],
+    origin: [
+      "http://192.168.1.115:3000",
+      "http://localhost:3003",
+      "http://tauri.host",
+    ],
     allowHeaders: ["Content-Type", "Authorization"],
-    allowMethods: ["POST", "GET", "OPTIONS"],
+    allowMethods: ["POST", "GET", "DELETE", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
     maxAge: 600,
     credentials: true,

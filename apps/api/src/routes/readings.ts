@@ -1,5 +1,5 @@
 import { createDatabaseConnection } from "@/db";
-import { houses, users, waterMeterReadings } from "@/db/schema";
+import { users, waterMeterReadings, waterMeters } from "@/db/schema";
 import { createRouter } from "@/lib/create-app";
 import { createRoute } from "@hono/zod-openapi";
 import { eq, sql } from "drizzle-orm";
@@ -8,7 +8,8 @@ import { z } from "zod";
 const insertReadingSchema = z.object({
   waterMeterId: z.string(),
   amount: z.number(),
-  readingDate: z.string(),
+  periodStart: z.string(),
+  periodEnd: z.string(),
 });
 
 const updateReadingSchema = z.object({
@@ -19,7 +20,8 @@ const readingSchema = z.object({
   id: z.string(),
   waterMeterId: z.string(),
   amount: z.number(),
-  readingDate: z.string(),
+  periodStart: z.string(),
+  periodEnd: z.string(),
   createdAt: z.date(),
 });
 
@@ -41,7 +43,7 @@ const readings = createRouter()
                   readingDate: z.string(),
                   createdAt: z.date(),
                   houseName: z.string().nullable(),
-                  headOfHousehold: z.string().nullable(),
+                  headOfWaterMeterhold: z.string().nullable(),
                 }),
               ),
             },
@@ -64,17 +66,17 @@ const readings = createRouter()
             id: waterMeterReadings.id,
             waterMeterId: waterMeterReadings.waterMeterId,
             amount: waterMeterReadings.amount,
-            readingDate: waterMeterReadings.readingDate,
+            periodStart: waterMeterReadings.periodStart,
+            periodEnd: waterMeterReadings.periodEnd,
             createdAt: waterMeterReadings.createdAt,
-            houseName: houses.name,
-            headOfHousehold: users.name,
+            headOfWaterMeterhold: users.name,
           })
           .from(waterMeterReadings)
           .leftJoin(
-            houses,
-            eq(houses.waterMeterId, waterMeterReadings.waterMeterId),
+            waterMeters,
+            eq(waterMeters.id, waterMeterReadings.waterMeterId),
           )
-          .leftJoin(users, eq(users.id, houses.headOfHousehold))
+          .leftJoin(users, eq(users.id, waterMeters.userId))
           .orderBy(sql`${waterMeterReadings.createdAt} desc`)
           .all();
         return c.json(readings, 200);

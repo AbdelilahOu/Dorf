@@ -17,8 +17,8 @@ import {
 export const Icons = {
   Profile: CircleUserRound,
   Settings: UserCog,
-  House: HouseIcon,
-  Houses: LayoutGrid,
+  WaterMeter: HouseIcon,
+  WaterMeters: LayoutGrid,
   MeterReadings: List,
   SignOut: LogOut,
   ChevronRight,

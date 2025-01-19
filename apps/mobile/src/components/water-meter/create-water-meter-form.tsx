@@ -24,36 +24,36 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
 
-const createHouseSchema = z.object({
-  waterMeterId: z.string().min(1, { message: "Water meter ID is required" }),
+const createWaterMeterSchema = z.object({
+  id: z.string().min(1, { message: "Water meter ID is required" }),
   district: z.string().min(1, { message: "District is required" }),
   name: z.string().min(1, { message: "Nmae of the house hold is required" }),
 });
 
-type CreateHouseSchema = z.infer<typeof createHouseSchema>;
+type CreateWaterMeterSchema = z.infer<typeof createWaterMeterSchema>;
 
 type Props = {
   token: string;
 };
 
-export const CreateHouseForm = ({ token }: Props) => {
+export const CreateWaterMeterForm = ({ token }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const form = useForm<CreateHouseSchema>({
-    resolver: zodResolver(createHouseSchema),
+  const form = useForm<CreateWaterMeterSchema>({
+    resolver: zodResolver(createWaterMeterSchema),
     defaultValues: {
-      waterMeterId: "",
+      id: "",
       district: "",
       name: "",
     },
   });
 
-  const createHouseMutation = useMutation({
-    mutationFn: async (NewHouse: CreateHouseSchema) => {
-      const response = await fetch(`${SERVER_URL}/api/houses`, {
+  const createWaterMeterMutation = useMutation({
+    mutationFn: async (NewWaterMeter: CreateWaterMeterSchema) => {
+      const response = await fetch(`${SERVER_URL}/api/v1/water-meters`, {
         method: "POST",
-        body: JSON.stringify(NewHouse),
+        body: JSON.stringify(NewWaterMeter),
         headers: new Headers({
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -65,8 +65,8 @@ export const CreateHouseForm = ({ token }: Props) => {
       }
     },
     onSuccess: () => {
-      toast({ title: "House Created" });
-      queryClient.invalidateQueries({ queryKey: ["houses"] });
+      toast({ title: "WaterMeter Created" });
+      queryClient.invalidateQueries({ queryKey: ["water-meters"] });
       form.reset();
     },
     onError: (error: any) => {
@@ -74,8 +74,8 @@ export const CreateHouseForm = ({ token }: Props) => {
     },
   });
 
-  const onSubmit = (data: CreateHouseSchema) => {
-    createHouseMutation.mutate(data);
+  const onSubmit = (data: CreateWaterMeterSchema) => {
+    createWaterMeterMutation.mutate(data);
   };
 
   return (
@@ -88,7 +88,7 @@ export const CreateHouseForm = ({ token }: Props) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
           <FormField
             control={form.control}
-            name="waterMeterId"
+            name="id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Water Meter ID</FormLabel>
@@ -119,7 +119,7 @@ export const CreateHouseForm = ({ token }: Props) => {
               <FormItem>
                 <FormLabel>Name of the house</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter House name" {...field} />
+                  <Input placeholder="Enter WaterMeter name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -131,8 +131,10 @@ export const CreateHouseForm = ({ token }: Props) => {
                 close
               </Button>
             </DrawerClose>
-            <Button type="submit" disabled={createHouseMutation.isPending}>
-              {createHouseMutation.isPending ? "Creating..." : "Create House"}
+            <Button type="submit" disabled={createWaterMeterMutation.isPending}>
+              {createWaterMeterMutation.isPending
+                ? "Creating..."
+                : "Create WaterMeter"}
             </Button>
           </DrawerFooter>
         </form>
