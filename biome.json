@@ -4,13 +4,7 @@
     "enabled": true
   },
   "files": {
-    "ignore": [
-      ".wrangler/**/*",
-      "crates/dorf-tauri/**/*",
-      "apps/mobile/src/routeTree.gen.ts",
-      "dist/**/*",
-      ".next/**/*"
-    ]
+    "ignore": [".wrangler/**/*", "src-tauri/**/*", "dist/**/*", ".next/**/*"]
   },
   "linter": {
     "enabled": true,

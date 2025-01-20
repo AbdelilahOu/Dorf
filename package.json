@@ -1,19 +1,15 @@
 {
   "name": "dorf",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "apps/*",
-    "tooling/*"
-  ],
+  "workspaces": ["packages/*", "apps/*", "tooling/*"],
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
-    "dev": "turbo dev --parallel --filter=@dorf/api --filter=@dorf/mobile",
     "dev:api": "turbo dev --filter=@dorf/api",
-    "dev:mobile": "turbo dev --filter=@dorf/mobile",
-    "build:mobile": "turbo run --filter @dorf/mobile build",
+    "dev:mobile": "bun --cwd=apps/mobile run dev",
+    "build:mobile": "bun --cwd=apps/mobile run build",
+    "tauri": "tauri",
     "test": "turbo test --parallel",
     "format": "biome format --write .",
     "lint": "turbo lint && bun lint:repo",

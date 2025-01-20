@@ -88,7 +88,9 @@ export const DeleteWaterMeterForm = ({ waterMeterId, token }: Props) => {
               variant="destructive"
               disabled={updateWaterMeterMutation.isPending}
             >
-              {updateWaterMeterMutation.isPending ? "Deleting..." : "Delete WaterMeter"}
+              {updateWaterMeterMutation.isPending
+                ? "Deleting..."
+                : "Delete WaterMeter"}
             </Button>
           </DrawerFooter>
         </form>

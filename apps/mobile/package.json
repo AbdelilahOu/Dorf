@@ -3,13 +3,10 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "workspaces": [
-    "../../packages/*"
-  ],
+  "workspaces": ["../../packages/*"],
   "scripts": {
     "dev": "bun run tauri android dev",
     "build": "bun run tauri android build --apk",
-    "tauri": "tauri",
     "dev:front-end": "vite",
     "build:front-end": "vite build",
     "preview": "vite preview",
