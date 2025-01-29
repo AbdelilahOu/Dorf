@@ -55,7 +55,3 @@ To build the app for Android, run:
 ```bash
 bun run tauri build
 ```
-
----
-
-Feel free to reach out if you have any questions or need further assistance! Together, we can make water management in our village more efficient.
