@@ -11,7 +11,7 @@ interface RouteContext {
   store: LazyStore;
 }
 
-const PUBLIC_PAGES = ["/app/auth", "/onboarding"];
+const PUBLIC_PAGES = ["/app/auth", "/onboarding", "/verify-email"];
 
 export const rootRoute = createRootRouteWithContext<RouteContext>()({
   beforeLoad: async ({ location, context }) => {
@@ -27,6 +27,8 @@ export const rootRoute = createRootRouteWithContext<RouteContext>()({
 
     const IsPublicPage = PUBLIC_PAGES.some((page) => pathname.startsWith(page));
 
+    console.log(IsPublicPage, pathname);
+
     if (!IsPublicPage) {
       const [token, user] = await Promise.allSettled([
         context.store.get<string>("token"),
@@ -39,6 +41,17 @@ export const rootRoute = createRootRouteWithContext<RouteContext>()({
       if (!userExists && !tokenExists) {
         throw redirect({
           to: "/onboarding",
+          search: {
+            redirect: href,
+          },
+        });
+      }
+
+      console.log(userExists && !user.value?.emailVerified);
+
+      if (userExists && !user.value?.emailVerified) {
+        throw redirect({
+          to: "/verify-email",
           search: {
             redirect: href,
           },

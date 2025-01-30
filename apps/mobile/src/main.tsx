@@ -18,12 +18,14 @@ import { onBoardingRoute } from "./routes/onboarding";
 import { invoicesRoute } from "./routes/app/invoice";
 import { getQueryClient } from "./lib/get-query-client";
 import { waterMetersRoute } from "./routes/app/water-meters";
+import { verifyEmailRoute } from "./routes/onboarding/verify-email-alert";
 
 const queryClient = getQueryClient();
 const store = setupStore();
 
 const routeTree = rootRoute.addChildren([
   onBoardingRoute,
+  verifyEmailRoute,
   appLayoutRoute.addChildren([
     indexRoute,
     authLayoutRoute.addChildren([signInRoute, signUpRoute]),

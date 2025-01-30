@@ -6,8 +6,9 @@ import {
   corsMiddleware,
   pinoLoggerMiddleware,
 } from "@/middleware";
-import readings from "./routes/readings";
-import waterMeters from "./routes/water-meters";
+import readingsRouter from "./routes/readings";
+import usersRouter from "./routes/users";
+import waterMetersRouter from "./routes/water-meters";
 
 const app = createApp();
 
@@ -21,7 +22,8 @@ app.on(["POST", "GET"], "/api/auth/**", (c) => {
   return setupAuth(c).handler(c.req.raw);
 });
 
-app.route("/api/v1/water-meters", waterMeters);
-app.route("/api/v1/readings", readings);
+app.route("/api/v1/water-meters", waterMetersRouter);
+app.route("/api/v1/readings", readingsRouter);
+app.route("/api/v1/users", usersRouter);
 
 export default app;

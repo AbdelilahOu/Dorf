@@ -30,6 +30,7 @@ const signUpSchema = z.object({
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters long" }),
+  nic: z.string().min(6, { message: "Cin must be at least 6 characters long" }),
 });
 
 type SignUpSchema = z.infer<typeof signUpSchema>;
@@ -45,18 +46,15 @@ export const SignUpForm: React.FC = () => {
       name: "",
       email: "",
       password: "",
+      nic: "",
     },
   });
 
   const navigate = useNavigate({ from: "/app/auth/signup" });
 
   const signUpMutation = useMutation({
-    mutationFn: async ({ name, email, password }: SignUpSchema) => {
-      const { data, error } = await authClient.signUp.email({
-        name,
-        email,
-        password,
-      });
+    mutationFn: async (User: SignUpSchema) => {
+      const { data, error } = await authClient.signUp.email(User);
       if (error) {
         throw error;
       }
@@ -123,6 +121,19 @@ export const SignUpForm: React.FC = () => {
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input type="password" placeholder="********" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="nic"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>National identity card</FormLabel>
+              <FormControl>
+                <Input type="text" placeholder="PA******" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
