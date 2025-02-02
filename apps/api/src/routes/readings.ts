@@ -170,6 +170,9 @@ const readings = createRouter()
         c.env.TURSO_AUTH_TOKEN,
       );
       const newReading = c.req.valid("json");
+
+      console.log(c.req.json());
+
       try {
         const insertedReading = await db
           .insert(waterMeterReadings)

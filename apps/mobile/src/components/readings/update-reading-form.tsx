@@ -52,7 +52,7 @@ export const UpdateReadingForm = ({ reading, token }: Props) => {
   const updateReadingMutation = useMutation({
     mutationFn: async ({ amount }: UpdateReadingSchema) => {
       const response = await fetch(
-        `${SERVER_URL}/api/v1/api/readings/${reading.id}`,
+        `${SERVER_URL}/api/v1/readings/${reading.id}`,
         {
           method: "PUT",
           body: JSON.stringify({ amount }),

@@ -41,7 +41,7 @@ export const DeleteWaterMeterForm = ({ waterMeterId, token }: Props) => {
   const updateWaterMeterMutation = useMutation({
     mutationFn: async (updateWaterMeter: DeleteWaterMeterSchema) => {
       const response = await fetch(
-        `${SERVER_URL}/api/v1/api/water-meters/${waterMeterId}`,
+        `${SERVER_URL}/api/v1/water-meters/${waterMeterId}`,
         {
           method: "PUT",
           body: JSON.stringify(updateWaterMeter),
