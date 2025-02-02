@@ -34,15 +34,6 @@ export function BottomNavigation({ user }: { user?: SelectUser }) {
       >
         <Icons.MeterReadings />
       </Link>
-      <Link
-        className={buttonVariants({
-          size: "icon",
-          variant: "ghost",
-        })}
-        to="/app/settings"
-      >
-        <Icons.Settings />
-      </Link>
     </div>
   );
 }

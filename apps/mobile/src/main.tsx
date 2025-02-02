@@ -13,7 +13,6 @@ import { authLayoutRoute } from "./routes/app/auth/layout";
 import { signInRoute } from "./routes/app/auth/signin";
 import { signUpRoute } from "./routes/app/auth/signup";
 import { readingsRoute } from "./routes/app/readings";
-import { settingsRoute } from "./routes/app/settings";
 import { onBoardingRoute } from "./routes/onboarding";
 import { invoicesRoute } from "./routes/app/invoice";
 import { getQueryClient } from "./lib/get-query-client";
@@ -31,7 +30,6 @@ const routeTree = rootRoute.addChildren([
     authLayoutRoute.addChildren([signInRoute, signUpRoute]),
     readingsRoute,
     waterMetersRoute,
-    settingsRoute,
     invoicesRoute,
   ]),
 ]);
