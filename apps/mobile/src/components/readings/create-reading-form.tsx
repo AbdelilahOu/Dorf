@@ -30,8 +30,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@dorf/ui/select";
-import { cn } from "@dorf/ui/utils";
-import { useState } from "react";
 
 const createReadingSchema = z.object({
   waterMeterId: z.coerce.string(),
@@ -122,7 +120,7 @@ export const CreateReadingForm = ({ token }: Props) => {
     year: string,
   ) => {
     const monthIndex = months.indexOf(month);
-    const date = new Date(parseInt(year), monthIndex, 1).toISOString();
+    const date = new Date(Number.parseInt(year), monthIndex, 1).toISOString();
     form.setValue(field, date);
   };
 
