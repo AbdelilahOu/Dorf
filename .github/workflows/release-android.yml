@@ -9,7 +9,6 @@ on:
       - production
     paths:
       - apps/mobile/**
-      - crates/dorf-tauri/**
 
 jobs:
   publish-android:
@@ -56,17 +55,17 @@ jobs:
 
       - name: Extract android signing key from env
         run: |
-          echo "${{ secrets.ANDROID_RELEASE_KEYSTORE }}" > ./crates/dorf-tauri/gen/android/release.jks.base64
-          base64 -d ./crates/dorf-tauri/gen/android/release.jks.base64 > ./crates/dorf-tauri/gen/android/release.decrypted.jks
+          echo "${{ secrets.ANDROID_RELEASE_KEYSTORE }}" > ./apps/mobile/src-tauri/gen/android/release.jks.base64
+          base64 -d ./apps/mobile/src-tauri/gen/android/release.jks.base64 > ./apps/mobile/src-tauri/gen/android/release.decrypted.jks
 
       - name: Sign APK
         run: |
-          ${{ env.ANDROID_HOME }}/build-tools/34.0.0/apksigner sign --ks ./crates/dorf-tauri/gen/android/release.decrypted.jks \
+          ${{ env.ANDROID_HOME }}/build-tools/34.0.0/apksigner sign --ks ./apps/mobile/src-tauri/gen/android/release.decrypted.jks \
             --ks-key-alias ${{ secrets.ANDROID_RELEASE_KEY }} \
             --ks-pass pass:${{ secrets.ANDROID_RELEASE_PASSWORD }} \
             --key-pass pass:${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }} \
-            --out ./crates/dorf-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-signed.apk \
-            ./crates/dorf-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
+            --out ./apps/mobile/src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-signed.apk \
+            ./apps/mobile/src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
 
       - name: Get project version
         id: package-version
@@ -74,7 +73,7 @@ jobs:
 
       - name: Rename APK file
         run: |
-          mv ./crates/dorf-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-signed.apk ./crates/dorf-tauri/gen/android/app/build/outputs/apk/universal/release/myappliation-${{ steps.package-version.outputs.current-version}}.apk
+          mv ./apps/mobile/src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-signed.apk ./apps/mobile/src-tauri/gen/android/app/build/outputs/apk/universal/release/myappliation-${{ steps.package-version.outputs.current-version}}.apk
 
       - name: Publish
         uses: softprops/action-gh-release@v1
@@ -84,4 +83,4 @@ jobs:
           tag_name: v${{ steps.package-version.outputs.current-version}}
           generate_release_notes: true
           files: |
-            ./crates/dorf-tauri/gen/android/app/build/outputs/apk/universal/release/myapplication-${{ steps.package-version.outputs.current-version}}.apk
+            ./apps/mobile/src-tauri/gen/android/app/build/outputs/apk/universal/release/myapplication-${{ steps.package-version.outputs.current-version}}.apk
