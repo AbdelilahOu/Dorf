@@ -1,4 +1,4 @@
-import type { SelectWaterMeter, SelectUser } from "@dorf/api/src/db/schema";
+import type { SelectUser } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
 import { Drawer } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
@@ -14,6 +14,7 @@ import {
   UpdateWaterMeterForm,
 } from "../../../components/water-meter";
 import { appLayoutRoute } from "../app-layout";
+import type { SelectWaterMeterType } from "@dorf/api/src/routes/water-meters";
 
 export const waterMetersRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
@@ -70,7 +71,7 @@ function WaterMetersComponent() {
 
   function handleOpenDrawer(
     drawer: string,
-    waterMeter?: Partial<SelectWaterMeter>,
+    waterMeter?: Partial<SelectWaterMeterType>,
   ) {
     setWichDrawer(drawer as "UPDATE_METER" | "DELETE_METER" | "CREATE_METER");
     setDrawerProps({ waterMeter, token });
@@ -87,7 +88,7 @@ function WaterMetersComponent() {
       <WaterMeters
         data={data || []}
         onDelete={(id) => handleOpenDrawer("DELETE_METER", { id })}
-        onUpdate={(waterMeter: SelectWaterMeter) =>
+        onUpdate={(waterMeter: SelectWaterMeterType) =>
           handleOpenDrawer("UPDATE_METER", waterMeter)
         }
       />

@@ -1,8 +1,8 @@
 import { createDatabaseConnection } from "@/db";
-import { users, waterMeterReadings, waterMeters } from "@/db/schema";
+import { waterMeterReadings, waterMeters } from "@/db/schema";
 import { createRouter } from "@/lib/create-app";
 import { createRoute } from "@hono/zod-openapi";
-import { count, eq, sql, sum } from "drizzle-orm";
+import { count, sql, sum } from "drizzle-orm";
 import { z } from "zod";
 
 const dashboardData = z.object({});

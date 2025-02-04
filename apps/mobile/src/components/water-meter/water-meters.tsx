@@ -1,4 +1,4 @@
-import type { SelectWaterMeter } from "@dorf/api/src/db/schema";
+import type { SelectWaterMeterType } from "@dorf/api/src/routes/water-meters";
 import { Button } from "@dorf/ui/button";
 import {
   Card,
@@ -11,8 +11,8 @@ import {
 import { Icons } from "@dorf/ui/icons";
 
 interface WaterMetersTableProps {
-  data: SelectWaterMeter[];
-  onUpdate: (house: SelectWaterMeter) => void;
+  data: SelectWaterMeterType[];
+  onUpdate: (house: SelectWaterMeterType) => void;
   onDelete: (id: string) => void;
 }
 
@@ -22,7 +22,7 @@ export function WaterMeters({
   onUpdate,
 }: WaterMetersTableProps) {
   return (
-    <div className="min-h-[100vh] space-y-4">
+    <div className="min-h-[100vh-5.5] space-y-4">
       {data.length > 0 ? (
         data.map((waterMeter) => (
           <Card key={waterMeter.id} className="shadow-sm">

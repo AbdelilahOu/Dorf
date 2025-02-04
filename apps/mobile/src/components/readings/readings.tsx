@@ -1,5 +1,5 @@
-import type { SelectReading } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
+import type { SelectReadingType } from "@dorf/api/src/routes/readings";
 import {
   Card,
   CardHeader,
@@ -11,8 +11,8 @@ import {
 import { Icons } from "@dorf/ui/icons";
 
 interface ReadingsProps {
-  data: SelectReading[];
-  onUpdate: (reading: SelectReading) => void;
+  data: SelectReadingType[];
+  onUpdate: (reading: SelectReadingType) => void;
   onDelete: (id: string) => void;
   onPrintInvoice: (id: string) => void;
 }
@@ -24,12 +24,12 @@ export function Readings({
   onPrintInvoice,
 }: ReadingsProps) {
   return (
-    <div className="space-y-4">
+    <div className="min-h-[100vh-5.5rem] space-y-4">
       {data.length > 0 ? (
         data.map((reading) => (
           <Card key={reading.waterMeterId} className="shadow-sm">
             <CardHeader className="px-4 pt-5 pb-1">
-              <CardTitle>Reading Details</CardTitle>
+              <CardTitle>{reading.waterMeterName}</CardTitle>
               <CardDescription>
                 Meter ID: {reading.waterMeterId}
               </CardDescription>
@@ -38,32 +38,55 @@ export function Readings({
               <div className="grid grid-cols-2">
                 <div className="flex items-center justify-start">
                   <div className="mr-2 flex items-center gap-2">
-                    <Icons.Droplet className="h-4 w-4 text-muted-foreground" />
+                    <Icons.Droplet
+                      size={20}
+                      className="text-muted-foreground"
+                    />
                   </div>
-                  <span>{reading.amount} (ton)</span>
+                  <span className="font-semibold">{reading.amount} (ton)</span>
                 </div>
                 <div className="flex items-center justify-start">
                   <div className="mr-2 flex items-center gap-2">
-                    <Icons.Calendar className="h-4 w-4 text-muted-foreground" />
+                    <Icons.Calendar
+                      size={20}
+                      className="text-muted-foreground"
+                    />
                   </div>
-                  <span>
-                    {reading.createdAt
-                      ? new Date(reading.createdAt).toLocaleDateString(
-                          "fr-fr",
-                          {
-                            month: "long",
-                            year: "numeric",
-                          },
-                        )
-                      : "N/A"}
-                  </span>
+                  <div className="flex items-center">
+                    <span className="font-semibold">
+                      {reading.periodStart
+                        ? new Date(reading.periodStart).toLocaleDateString(
+                            "fr-fr",
+                            {
+                              month: "long",
+                              year: "numeric",
+                            },
+                          )
+                        : "N/A"}
+                    </span>
+                    <Icons.ArrowRight
+                      className="mx-3 text-muted-foreground"
+                      size={20}
+                    />
+                    <span className="font-semibold">
+                      {reading.periodEnd
+                        ? new Date(reading.periodEnd).toLocaleDateString(
+                            "fr-fr",
+                            {
+                              month: "long",
+                              year: "numeric",
+                            },
+                          )
+                        : "N/A"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </CardContent>
-            <CardFooter className="grid grid-cols-2 gap-2 px-4 py-4">
+            <CardFooter className="grid grid-cols-3 gap-2 px-4 py-4">
               <Button
                 variant="default"
-                className="col-span-2"
+                // className="col-span-2"
                 onClick={() => onPrintInvoice(reading.waterMeterId)}
               >
                 Print Invoice

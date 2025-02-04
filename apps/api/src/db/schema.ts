@@ -95,20 +95,3 @@ export const waterMeterReadings = sqliteTable("water_meter_readings", {
 
 export type InsertUser = typeof users.$inferInsert;
 export type SelectUser = typeof users.$inferSelect;
-
-export type InsertSession = typeof sessions.$inferInsert;
-export type SelectSession = typeof sessions.$inferSelect;
-
-export type InsertAccount = typeof accounts.$inferInsert;
-export type SelectAccount = typeof accounts.$inferSelect;
-
-export type InsertVerification = typeof verifications.$inferInsert;
-export type SelectVerification = typeof verifications.$inferSelect;
-
-export type InsertWaterMeter = typeof waterMeters.$inferInsert;
-export type SelectWaterMeter = typeof waterMeters.$inferSelect & {
-  headOfWaterMeterhold: string;
-};
-
-export type InsertReading = typeof waterMeterReadings.$inferInsert;
-export type SelectReading = typeof waterMeterReadings.$inferSelect;

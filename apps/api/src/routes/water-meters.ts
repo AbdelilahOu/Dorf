@@ -23,6 +23,10 @@ const waterMeterSchema = z.object({
   updatedAt: z.date().nullable(),
 });
 
+export type SelectWaterMeterType = typeof waterMeterSchema._type;
+export type UpdateWaterMeterType = typeof updateWaterMeterSchema._type;
+export type InsertWaterMeterType = typeof insertWaterMeterSchema._type;
+
 const waterMeterRoute = createRouter()
   .openapi(
     createRoute({

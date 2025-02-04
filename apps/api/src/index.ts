@@ -2,10 +2,10 @@ import { setupAuth } from "@/lib/auth";
 import configureOpenAPI from "@/lib/config-open-api";
 import createApp from "@/lib/create-app";
 import { authMiddleware, pinoLoggerMiddleware } from "@/middleware";
+import dashboardRouter from "./routes/dashboard";
 import readingsRouter from "./routes/readings";
 import usersRouter from "./routes/users";
 import waterMetersRouter from "./routes/water-meters";
-import dashboardRouter from "./routes/dashboard";
 
 const app = createApp();
 

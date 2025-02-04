@@ -1,4 +1,4 @@
-import type { SelectReading, SelectUser } from "@dorf/api/src/db/schema";
+import type { SelectUser } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
 import { Drawer } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
@@ -14,6 +14,7 @@ import {
   UpdateReadingForm,
 } from "../../../components/readings";
 import { appLayoutRoute } from "../app-layout";
+import type { SelectReadingType } from "@dorf/api/src/routes/readings";
 
 export const readingsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
@@ -68,7 +69,10 @@ function ReadingsComponent() {
     retry: false,
   });
 
-  function handleOpenDrawer(drawer: string, reading?: Partial<SelectReading>) {
+  function handleOpenDrawer(
+    drawer: string,
+    reading?: Partial<SelectReadingType>,
+  ) {
     setWichDrawer(
       drawer as "UPDATE_READING" | "DELETE_READING" | "CREATE_READING",
     );
@@ -86,7 +90,7 @@ function ReadingsComponent() {
       <Readings
         data={data || []}
         onDelete={(id) => handleOpenDrawer("DELETE_READING", { id })}
-        onUpdate={(reading: SelectReading) =>
+        onUpdate={(reading: SelectReadingType) =>
           handleOpenDrawer("UPDATE_READING", reading)
         }
         onPrintInvoice={() => {}}

@@ -22,8 +22,13 @@ const readingSchema = z.object({
   amount: z.number(),
   periodStart: z.string(),
   periodEnd: z.string(),
-  createdAt: z.date(),
+  createdAt: z.string().nullable(),
+  waterMeterName: z.string().nullable(),
 });
+
+export type SelectReadingType = typeof readingSchema._type;
+export type UpdateReadingType = typeof updateReadingSchema._type;
+export type InsertReadingType = typeof insertReadingSchema._type;
 
 const readings = createRouter()
   .openapi(
@@ -35,17 +40,7 @@ const readings = createRouter()
         200: {
           content: {
             "application/json": {
-              schema: z.array(
-                z.object({
-                  id: z.string(),
-                  waterMeterId: z.string(),
-                  amount: z.number(),
-                  readingDate: z.string(),
-                  createdAt: z.date(),
-                  houseName: z.string().nullable(),
-                  headOfWaterMeterhold: z.string().nullable(),
-                }),
-              ),
+              schema: z.array(readingSchema),
             },
           },
           description: "Retrieve all water meter readings",
@@ -69,7 +64,7 @@ const readings = createRouter()
             periodStart: waterMeterReadings.periodStart,
             periodEnd: waterMeterReadings.periodEnd,
             createdAt: waterMeterReadings.createdAt,
-            headOfWaterMeterhold: users.name,
+            waterMeterName: waterMeters.name,
           })
           .from(waterMeterReadings)
           .leftJoin(
