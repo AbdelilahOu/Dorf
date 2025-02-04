@@ -1,4 +1,5 @@
 import {
+  ArrowRight,
   CalendarIcon,
   ChevronLeft,
   ChevronRight,
@@ -29,4 +30,5 @@ export const Icons = {
   MoreHorizontal,
   MapPin,
   Droplet,
+  ArrowRight,
 };
