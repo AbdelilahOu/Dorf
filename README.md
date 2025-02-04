@@ -8,7 +8,6 @@ Dorf, which means "village" in German, is a mobile application I developed to he
 
 - **Water Consumption Tracking**: Easily track water usage for each household in the village.
 - **Invoice Generation**: Automatically generate invoices based on water consumption.
-- **Local Water Supply Management**: Tailored for villages like ours that manage their own water supply systems.
 - **User-Friendly Interface**: Built with a focus on simplicity and ease of use for all villagers.
 
 ## Technology Stack
