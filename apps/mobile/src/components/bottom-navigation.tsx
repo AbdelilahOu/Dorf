@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 export function BottomNavigation({ user }: { user?: SelectUser }) {
   if (!user) return <></>;
   return (
-    <div className="fixed bottom-0 flex min-h-10 w-full items-center justify-between bg-white px-8 py-1">
+    <div className="fixed bottom-0 flex h-10 min-h-10 w-full items-center justify-between bg-white px-8 py-1">
       <Link
         className={buttonVariants({
           size: "icon",

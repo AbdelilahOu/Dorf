@@ -22,7 +22,7 @@ export function WaterMeters({
   onUpdate,
 }: WaterMetersTableProps) {
   return (
-    <div className="space-y-4">
+    <div className="min-h-[100vh] space-y-4">
       {data.length > 0 ? (
         data.map((waterMeter) => (
           <Card key={waterMeter.id} className="shadow-sm">

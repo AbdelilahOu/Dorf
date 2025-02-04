@@ -25,7 +25,7 @@ function AppLayoutRouteComponent() {
   return (
     <div className="grainy-light relative flex h-[100vh] flex-col">
       <TopNavigation user={data?.user} />
-      <main className="h-full p-2">
+      <main className="px-2 pt-11 pb-12">
         <Outlet />
       </main>
       <BottomNavigation user={data?.user} />

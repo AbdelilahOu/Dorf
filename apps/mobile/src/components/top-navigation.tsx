@@ -26,7 +26,7 @@ export function TopNavigation({ user }: { user?: SelectUser }) {
   };
 
   return (
-    <div className="flex h-11 w-full items-center justify-between bg-white">
+    <div className="fixed top-0 flex h-11 min-h-11 w-full items-center justify-between bg-white px-2 py-1 shadow-sm">
       <Button onClick={handleOnGoBack} size={"icon"} variant={"ghost"}>
         <Icons.ChevronLeft />
       </Button>

@@ -5,6 +5,7 @@ import { authMiddleware, pinoLoggerMiddleware } from "@/middleware";
 import readingsRouter from "./routes/readings";
 import usersRouter from "./routes/users";
 import waterMetersRouter from "./routes/water-meters";
+import dashboardRouter from "./routes/dashboard";
 
 const app = createApp();
 
@@ -19,6 +20,7 @@ app.on(["POST", "GET"], "/api/auth/**", (c) => {
 });
 
 app.route("/api/v1/water-meters", waterMetersRouter);
+app.route("/api/v1/dashboard", dashboardRouter);
 app.route("/api/v1/readings", readingsRouter);
 app.route("/api/v1/users", usersRouter);
 
