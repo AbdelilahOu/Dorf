@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "identifier": "com.dorf.dev",
   "build": {
-    "beforeBuildCommand": "bun run build:front-end",
-    "beforeDevCommand": "bun run dev:front-end",
+    "beforeBuildCommand": "bun run build",
+    "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:3000",
     "frontendDist": "../dist"
   },
