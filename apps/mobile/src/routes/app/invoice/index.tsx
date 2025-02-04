@@ -55,6 +55,17 @@ function InvoicesComponent() {
   return (
     <div className="h-full w-full">
       <div className="mb-4 flex items-center justify-center">INVOICE: {id}</div>
+      {Object.entries(data).map(([key, value]) => {
+        return (
+          <div key={key}>
+            <div>
+              {/* @ts-ignore */}
+              {key}: {value}
+            </div>
+            <br />
+          </div>
+        );
+      })}
     </div>
   );
 }
