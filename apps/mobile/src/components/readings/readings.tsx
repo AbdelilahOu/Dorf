@@ -87,7 +87,7 @@ export function Readings({
               <Button
                 variant="default"
                 // className="col-span-2"
-                onClick={() => onPrintInvoice(reading.waterMeterId)}
+                onClick={() => onPrintInvoice(reading.id)}
               >
                 Print Invoice
               </Button>

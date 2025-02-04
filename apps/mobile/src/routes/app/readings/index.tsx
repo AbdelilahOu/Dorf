@@ -1,9 +1,8 @@
-import type { SelectUser } from "@dorf/api/src/db/schema";
 import { Button } from "@dorf/ui/button";
 import { Drawer } from "@dorf/ui/drawer";
 import { useToast } from "@dorf/ui/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { createRoute } from "@tanstack/react-router";
+import { createRoute, useNavigate } from "@tanstack/react-router";
 import { fetch } from "@tauri-apps/plugin-http";
 import { useState } from "react";
 import { SERVER_URL } from "../../../../env";
@@ -30,8 +29,8 @@ export const readingsRoute = createRoute({
 
 function ReadingsComponent() {
   const { toast } = useToast();
-  const { user, token } = readingsRoute.useLoaderData() as {
-    user: SelectUser;
+  const navigate = useNavigate({ from: "/app/readings" });
+  const { token } = readingsRoute.useLoaderData() as {
     token: string;
   };
 
@@ -80,6 +79,10 @@ function ReadingsComponent() {
     setOpenDrawer(true);
   }
 
+  function handlePrintInvocie(id: string) {
+    navigate({ to: "/app/invoices", search: { id } });
+  }
+
   return (
     <div className="h-full w-full">
       <div className="flex justify-end py-2">
@@ -93,7 +96,7 @@ function ReadingsComponent() {
         onUpdate={(reading: SelectReadingType) =>
           handleOpenDrawer("UPDATE_READING", reading)
         }
-        onPrintInvoice={() => {}}
+        onPrintInvoice={handlePrintInvocie}
       />
       <Drawer
         fixed={true}
