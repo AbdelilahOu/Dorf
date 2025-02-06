@@ -2,7 +2,7 @@ import { createDatabaseConnection } from "@/db";
 import { users, waterMeterReadings, waterMeters } from "@/db/schema";
 import { createRouter } from "@/lib/create-app";
 import { createRoute } from "@hono/zod-openapi";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, gte, like, lte, not, sql } from "drizzle-orm";
 import { z } from "zod";
 
 const insertReadingSchema = z.object({
@@ -36,6 +36,14 @@ const readings = createRouter()
       method: "get",
       path: "/",
       summary: "Get all water meter readings",
+      request: {
+        query: z.object({
+          name: z.string().optional(),
+          id: z.string().optional(),
+          periodStart: z.string().optional(),
+          periodEnd: z.string().optional(),
+        }),
+      },
       responses: {
         200: {
           content: {
@@ -56,6 +64,7 @@ const readings = createRouter()
           c.env.TURSO_CONNECTION_URL,
           c.env.TURSO_AUTH_TOKEN,
         );
+        const { name, id, periodStart, periodEnd } = c.req.valid("query");
         const readings = await db
           .select({
             id: waterMeterReadings.id,
@@ -72,6 +81,21 @@ const readings = createRouter()
             eq(waterMeters.id, waterMeterReadings.waterMeterId),
           )
           .leftJoin(users, eq(users.id, waterMeters.userId))
+          .where(
+            and(
+              not(eq(waterMeters.deleted, true)),
+              eq(waterMeters.id, id ?? waterMeters.id),
+              like(waterMeters.name, name ?? waterMeters.name),
+              gte(
+                waterMeterReadings.periodStart,
+                periodStart ?? waterMeterReadings.periodStart,
+              ),
+              lte(
+                waterMeterReadings.periodEnd,
+                periodEnd ?? waterMeterReadings.periodEnd,
+              ),
+            ),
+          )
           .orderBy(sql`${waterMeterReadings.createdAt} desc`)
           .all();
         return c.json(readings, 200);

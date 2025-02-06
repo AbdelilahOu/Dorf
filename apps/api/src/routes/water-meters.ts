@@ -2,7 +2,7 @@ import { createDatabaseConnection } from "@/db";
 import { waterMeters } from "@/db/schema";
 import { createRouter } from "@/lib/create-app";
 import { createRoute } from "@hono/zod-openapi";
-import { and, eq, not, sql } from "drizzle-orm";
+import { and, eq, like, not, sql } from "drizzle-orm";
 import { z } from "zod";
 
 const insertWaterMeterSchema = z.object({
@@ -32,6 +32,12 @@ const waterMeterRoute = createRouter()
     createRoute({
       method: "get",
       path: "/",
+      request: {
+        query: z.object({
+          name: z.string().optional(),
+          id: z.string().optional(),
+        }),
+      },
       summary: "Get all non-deleted water meters",
       responses: {
         200: {
@@ -53,10 +59,17 @@ const waterMeterRoute = createRouter()
           c.env.TURSO_CONNECTION_URL,
           c.env.TURSO_AUTH_TOKEN,
         );
+        const { name, id } = c.req.valid("query");
         const data = await db
           .select()
           .from(waterMeters)
-          .where(not(eq(waterMeters.deleted, true)))
+          .where(
+            and(
+              not(eq(waterMeters.deleted, true)),
+              eq(waterMeters.id, id ?? waterMeters.id),
+              like(waterMeters.name, name ?? waterMeters.name),
+            ),
+          )
           .orderBy(sql`${waterMeters.updatedAt} desc`)
           .all();
         return c.json(data, 200);
