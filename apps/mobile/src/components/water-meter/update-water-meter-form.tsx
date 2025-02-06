@@ -23,7 +23,7 @@ import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
-import type { SelectWaterMeter } from "@dorf/api/src/db/schema";
+import type { SelectWaterMeterType } from "@dorf/api/src/routes/water-meters";
 
 const updateWaterMeterSchema = z.object({
   id: z.string().min(1, { message: "Water meter ID is required" }),
@@ -34,7 +34,7 @@ const updateWaterMeterSchema = z.object({
 type UpdateWaterMeterSchema = z.infer<typeof updateWaterMeterSchema>;
 
 type Props = {
-  waterMeter: SelectWaterMeter;
+  waterMeter: SelectWaterMeterType;
   token: string;
 };
 

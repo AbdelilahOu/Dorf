@@ -23,7 +23,7 @@ import { fetch } from "@tauri-apps/plugin-http";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SERVER_URL } from "../../../env";
-import type { SelectReading } from "@dorf/api/src/db/schema";
+import type { SelectReadingType } from "@dorf/api/src/routes/readings";
 
 const updateReadingSchema = z.object({
   amount: z.coerce
@@ -34,7 +34,7 @@ const updateReadingSchema = z.object({
 type UpdateReadingSchema = z.infer<typeof updateReadingSchema>;
 
 type Props = {
-  reading: SelectReading;
+  reading: SelectReadingType;
   token: string;
 };
 
