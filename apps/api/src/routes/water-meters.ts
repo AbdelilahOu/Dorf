@@ -66,8 +66,8 @@ const waterMeterRoute = createRouter()
           .where(
             and(
               not(eq(waterMeters.deleted, true)),
-              eq(waterMeters.id, id ?? waterMeters.id),
-              like(waterMeters.name, name ?? waterMeters.name),
+              id ? eq(waterMeters.id, id) : undefined,
+              name ? like(waterMeters.name, `%${name}%`) : undefined,
             ),
           )
           .orderBy(sql`${waterMeters.updatedAt} desc`)

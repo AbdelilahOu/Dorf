@@ -1,7 +1,11 @@
 import { setupAuth } from "@/lib/auth";
 import configureOpenAPI from "@/lib/config-open-api";
 import createApp from "@/lib/create-app";
-import { authMiddleware, pinoLoggerMiddleware } from "@/middleware";
+import {
+  authMiddleware,
+  corsMiddleware,
+  pinoLoggerMiddleware,
+} from "@/middleware";
 import dashboardRouter from "./routes/dashboard";
 import readingsRouter from "./routes/readings";
 import usersRouter from "./routes/users";
@@ -12,7 +16,7 @@ const app = createApp();
 configureOpenAPI(app);
 
 app.use("/api/v1/*", authMiddleware);
-// app.use("*", corsMiddleware());
+app.use("*", corsMiddleware());
 app.use("*", pinoLoggerMiddleware());
 
 app.on(["POST", "GET"], "/api/auth/**", (c) => {

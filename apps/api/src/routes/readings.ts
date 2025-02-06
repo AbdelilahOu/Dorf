@@ -40,6 +40,7 @@ const readings = createRouter()
         query: z.object({
           name: z.string().optional(),
           id: z.string().optional(),
+          waterMeterid: z.string().optional(),
           periodStart: z.string().optional(),
           periodEnd: z.string().optional(),
         }),
@@ -64,7 +65,8 @@ const readings = createRouter()
           c.env.TURSO_CONNECTION_URL,
           c.env.TURSO_AUTH_TOKEN,
         );
-        const { name, id, periodStart, periodEnd } = c.req.valid("query");
+        const { name, waterMeterid, periodStart, periodEnd, id } =
+          c.req.valid("query");
         const readings = await db
           .select({
             id: waterMeterReadings.id,
@@ -84,16 +86,15 @@ const readings = createRouter()
           .where(
             and(
               not(eq(waterMeters.deleted, true)),
-              eq(waterMeters.id, id ?? waterMeters.id),
-              like(waterMeters.name, name ?? waterMeters.name),
-              gte(
-                waterMeterReadings.periodStart,
-                periodStart ?? waterMeterReadings.periodStart,
-              ),
-              lte(
-                waterMeterReadings.periodEnd,
-                periodEnd ?? waterMeterReadings.periodEnd,
-              ),
+              id ? eq(waterMeterReadings.id, id) : undefined,
+              waterMeterid ? eq(waterMeters.id, waterMeterid) : undefined,
+              name ? like(waterMeters.name, `%${name}%`) : undefined,
+              periodStart
+                ? gte(waterMeterReadings.periodStart, periodStart)
+                : undefined,
+              periodEnd
+                ? lte(waterMeterReadings.periodEnd, periodEnd)
+                : undefined,
             ),
           )
           .orderBy(sql`${waterMeterReadings.createdAt} desc`)
