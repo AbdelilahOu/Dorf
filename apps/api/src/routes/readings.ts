@@ -1,6 +1,6 @@
-import { createDatabaseConnection } from "@/db";
-import { users, waterMeterReadings, waterMeters } from "@/db/schema";
-import { createRouter } from "@/lib/create-app";
+import { createDatabaseConnection } from "../db";
+import { users, waterMeterReadings, waterMeters } from "../db/schema";
+import { createRouter } from "../lib/create-app";
 import { createRoute } from "@hono/zod-openapi";
 import { and, eq, gte, like, lte, not, sql } from "drizzle-orm";
 import { z } from "zod";
