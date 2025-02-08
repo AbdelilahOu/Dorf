@@ -37,7 +37,7 @@ function WaterMeterComponent() {
       const data = await response.json();
       return data;
     },
-    initialData: { waterMetersCount: 0, totalWaterConsumption: "123" },
+    initialData: { waterMetersCount: 0, totalWaterConsumption: 0 },
   });
   return (
     <div className="h-full w-full">
