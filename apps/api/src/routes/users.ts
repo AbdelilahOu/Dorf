@@ -1,9 +1,9 @@
-import { createDatabaseConnection } from "../db";
-import { users } from "../db/schema";
-import { createRouter } from "../lib/create-app";
 import { createRoute } from "@hono/zod-openapi";
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
+import { createDatabaseConnection } from "../db";
+import { users } from "../db/schema";
+import { createRouter } from "../lib/create-app";
 
 const updateUserSchema = z.object({
   name: z.string().optional(),
